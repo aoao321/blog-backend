@@ -1,9 +1,8 @@
 package com.aoao.blog.web.controller;
 
-import com.aoao.blog.module.common.aspect.ApiOperationLog;
-import com.aoao.blog.module.common.enums.ResponseCodeEnum;
-import com.aoao.blog.module.common.exception.BizException;
-import com.aoao.blog.module.common.utils.Result;
+import com.aoao.blog.common.aspect.ApiOperationLog;
+import com.aoao.blog.common.utils.Result;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 public class HelloController {
 
     @ApiOperationLog(description = "你好啊")
-    @RequestMapping("/hello")
+    @GetMapping("/admin/hello")
     public Result hello(String name) {
         LocalDateTime now = LocalDateTime.now();
         return Result.success(now);

@@ -1,10 +1,11 @@
 package com.aoao.blog.web.handler;
 
-import com.aoao.blog.module.common.enums.ResponseCodeEnum;
-import com.aoao.blog.module.common.exception.BaseException;
-import com.aoao.blog.module.common.exception.BizException;
-import com.aoao.blog.module.common.utils.Result;
+import com.aoao.blog.common.enums.ResponseCodeEnum;
+import com.aoao.blog.common.exception.BaseException;
+import com.aoao.blog.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -81,4 +82,5 @@ public class GlobalExceptionHandler {
 
         return Result.fail(errorCode, errorMessage);
     }
+
 }
