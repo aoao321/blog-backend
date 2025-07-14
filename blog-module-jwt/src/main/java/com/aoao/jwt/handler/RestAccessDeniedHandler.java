@@ -1,5 +1,8 @@
 package com.aoao.jwt.handler;
 
+import com.aoao.blog.common.enums.ResponseCodeEnum;
+import com.aoao.blog.common.utils.Result;
+import com.aoao.jwt.utils.HttpResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -20,7 +23,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.warn("登录成功访问收保护的资源，但是权限不够: ", accessDeniedException);
-        // 预留，后面引入多角色时会用到
+        log.warn("登录成功访问收保护的资源，但是权限不够:{} ", accessDeniedException.getMessage());
+        HttpResultUtil.fail(response, Result.fail(ResponseCodeEnum.FORBIDDEN));
     }
 }

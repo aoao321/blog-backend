@@ -20,6 +20,7 @@ public enum ResponseCodeEnum  {
 
     LOGIN_FAIL("20000", "登录失败"),
     UNAUTHORIZED("20002","用户未授权"),
+    FORBIDDEN("20004", "该账号仅支持查询操作！"),
     USERNAME_OR_PWD_IS_NULL("20003","用户名或密码为空"),
     USERNAME_OR_PWD_ERROR("20001", "用户名或密码错误"),
     ;

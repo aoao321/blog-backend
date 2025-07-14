@@ -4,6 +4,7 @@ import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BaseException;
 import com.aoao.blog.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
@@ -45,6 +46,18 @@ public class GlobalExceptionHandler {
     public Result handleOtherException(HttpServletRequest request, Exception e) {
         log.error("{} request error, ", request.getRequestURI(), e);
         return Result.fail(ResponseCodeEnum.SYSTEM_ERROR);
+    }
+
+    /**
+     * 只捕获异常，处理交给RestAccessDeniedHandler
+     * @param e
+     * @throws AccessDeniedException
+     */
+    @ExceptionHandler({ AccessDeniedException.class })
+    public void throwAccessDeniedException(AccessDeniedException e) throws AccessDeniedException {
+        // 捕获到鉴权失败异常，主动抛出，交给 RestAccessDeniedHandler 去处理
+        log.info("============= 捕获到 AccessDeniedException");
+        throw e;
     }
 
     /**
