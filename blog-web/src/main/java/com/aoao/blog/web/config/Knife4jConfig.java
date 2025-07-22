@@ -15,35 +15,34 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  * @author aoao
  * @create 2025-07-11-11:57
  */
-@Configuration
+// web模块的配置类，类名和配置类bean名称都改下
+@Configuration("webKnife4jConfig")
 @EnableSwagger2WebMvc
 public class Knife4jConfig {
-
     @Bean("webApi")
-    public Docket createApiDoc() {
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(buildApiInfo())
-                // 分组名称
+    public Docket createWebApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Web 前台接口")
                 .select()
-                // 这里指定 Controller 扫描包路径
                 .apis(RequestHandlerSelectors.basePackage("com.aoao.blog.web.controller"))
                 .paths(PathSelectors.any())
-                .build();
-        return docket;
+                .build()
+                .apiInfo(new ApiInfoBuilder()
+                        .title("Web 前台接口文档")
+                        .version("1.0")
+                        .build());
     }
-
-    /**
-     * 构建 API 信息
-     * @return
-     */
-    private ApiInfo buildApiInfo() {
-        return new ApiInfoBuilder()
-                .title("Weblog 博客前台接口文档") // 标题
-                .description("Weblog 是一款由 Spring Boot + Vue 3.2 + Vite 4.3 开发的前后端分离博客。") // 描述
-                .termsOfServiceUrl("https://www.aoao.com/") // API 服务条款
-                //.contact(new Contact("aoao", "https://www.quanxiaoha.com", "871361652@qq.com")) // 联系人
-                .version("1.0") // 版本号
-                .build();
+    @Bean("adminApi")
+    public Docket createAdminApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Admin 后台接口")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.aoao.blog.admin.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(new ApiInfoBuilder()
+                        .title("Admin 后台接口文档")
+                        .version("1.0")
+                        .build());
     }
 }

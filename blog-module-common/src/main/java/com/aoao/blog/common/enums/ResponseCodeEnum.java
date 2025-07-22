@@ -23,7 +23,9 @@ public enum ResponseCodeEnum  {
     FORBIDDEN("20004", "该账号仅支持查询操作！"),
     USERNAME_OR_PWD_IS_NULL("20003","用户名或密码为空"),
     USERNAME_OR_PWD_ERROR("20001", "用户名或密码错误"),
-    ;
+    USERNAME_NOT_EXIST("20005", "用户名不存在"),
+    CATEGORY_EXIST("30001", "该分类已经存在"),
+    CATEGORY_NOT_EXIST("30002","该分类不存在" );
 
     ResponseCodeEnum(String errorCode, String errorMessage) {
         this.errorCode = errorCode;

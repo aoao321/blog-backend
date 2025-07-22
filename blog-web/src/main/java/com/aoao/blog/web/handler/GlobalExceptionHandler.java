@@ -72,7 +72,6 @@ public class GlobalExceptionHandler {
 
         // 获取 BindingResult
         BindingResult bindingResult = e.getBindingResult();
-
         StringBuilder sb = new StringBuilder();
 
         // 获取校验不通过的字段，并组合错误信息，格式为： email 邮箱格式不正确, 当前值: '123124qq.com';
@@ -94,6 +93,13 @@ public class GlobalExceptionHandler {
         log.warn("{} request error, errorCode: {}, errorMessage: {}", request.getRequestURI(), errorCode, errorMessage);
 
         return Result.fail(errorCode, errorMessage);
+    }
+
+    @ExceptionHandler({ RuntimeException.class })
+    @ResponseBody
+    public Result handleRuntimeException(HttpServletRequest request, RuntimeException e) {
+        log.error("{} request error, ", request.getRequestURI(), e);
+        return Result.fail(ResponseCodeEnum.SYSTEM_ERROR);
     }
 
 }
