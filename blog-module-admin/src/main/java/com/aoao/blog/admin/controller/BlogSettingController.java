@@ -1,0 +1,43 @@
+package com.aoao.blog.admin.controller;
+
+import com.aoao.blog.admin.model.vo.setting.FindBlogSettingsRspVO;
+import com.aoao.blog.admin.model.vo.setting.UpdateBlogSettingsReqVO;
+import com.aoao.blog.admin.service.BlogSettingService;
+import com.aoao.blog.common.domain.dos.BlogSettingsDO;
+import com.aoao.blog.common.utils.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+/**
+ * @author aoao
+ * @create 2025-07-22-14:49
+ */
+@RestController
+@RequestMapping("/admin/blog/settings")
+@Api("设置模块")
+public class BlogSettingController {
+
+    @Autowired
+    private BlogSettingService blogSettingService;
+
+    @PostMapping("/update")
+    @ApiOperation("更新设置")
+    public Result updateSetting(@RequestBody @Valid UpdateBlogSettingsReqVO reqVO) {
+        blogSettingService.updateSetting(reqVO);
+        return Result.success();
+    }
+
+    @PostMapping("/detail")
+    @ApiOperation("获取详情")
+    public Result<FindBlogSettingsRspVO> detailSetting() {
+        FindBlogSettingsRspVO vo = blogSettingService.getDetail();
+        return Result.success(vo);
+    }
+}

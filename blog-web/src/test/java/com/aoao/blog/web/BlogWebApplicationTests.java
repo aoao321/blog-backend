@@ -36,4 +36,10 @@ class BlogWebApplicationTests {
         System.out.println(userRoleMapper.selectRoleNameByUserName("admin"));
     }
 
+    @Test
+    void testString() {
+        String a = "1.txt";
+        System.out.println(a.substring(a.lastIndexOf(".")));
+    }
+
 }

@@ -72,6 +72,7 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jjwt.version>0.11.5</jjwt.version>
         <pagehelper>1.4.6</pagehelper>
+        <minio.version>8.2.1</minio.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -81,6 +82,11 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.aoao</groupId>
