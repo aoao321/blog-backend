@@ -1,26 +1,28 @@
 package com.aoao.blog.admin.service.impl;
 
-import com.aoao.blog.admin.model.vo.tag.AddTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.DeleteTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListRspVO;
+import com.aoao.blog.common.domain.dos.ArticleTagRelDO;
+import com.aoao.blog.common.domain.mapper.ArticleMapper;
+import com.aoao.blog.common.domain.mapper.ArticleTagRelMapper;
+import com.aoao.blog.common.model.admin.vo.tag.*;
 import com.aoao.blog.admin.service.TagService;
 import com.aoao.blog.common.domain.dos.TagDO;
 import com.aoao.blog.common.domain.mapper.TagMapper;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BizException;
-import com.aoao.blog.common.utils.PageResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -28,10 +30,13 @@ import java.util.stream.Collectors;
  * @create 2025-07-22-9:36
  */
 @Service
+@Slf4j
 public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public void addTag(AddTagReqVO addTagReqVO) {
@@ -54,6 +59,13 @@ public class TagServiceImpl implements TagService {
         Long id = deleteTagReqVO.getId();
         TagDO tagDO = tagMapper.selectById(id);
         if (tagDO != null) {
+            // 校验该标签下是否有关联的文章，若有，则不允许删除，提示用户需要先删除标签下的文章
+            ArticleTagRelDO articleTagRelDO = articleTagRelMapper.selectOne(new QueryWrapper<ArticleTagRelDO>()
+                    .eq("tag_id", id));
+            if (Objects.nonNull(articleTagRelDO)) {
+                log.warn("==> 此标签下包含文章，无法删除，tagId: {}", id);
+                throw new BizException(ResponseCodeEnum.TAG_CAN_NOT_DELETE);
+            }
             tagMapper.deleteById(id);
         }else {
             throw new BizException(ResponseCodeEnum.TAG_NOT_EXIST);
@@ -61,7 +73,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public PageResult<FindTagPageListRspVO> page(FindTagPageListReqVO findTagPageListReqVO) {
+    public PageInfo<FindTagPageListRspVO> page(FindTagPageListReqVO findTagPageListReqVO) {
         // 根据条件查询
         String name = findTagPageListReqVO.getName();
         LocalDate endDate = findTagPageListReqVO.getEndDate();
@@ -79,7 +91,19 @@ public class TagServiceImpl implements TagService {
             return vo;
         }).collect(Collectors.toList());
         PageInfo<FindTagPageListRspVO> pageInfo = new PageInfo<>(findTagPageListRspVOList);
-        return PageResult.success(pageInfo);
+        return pageInfo;
+    }
+
+    @Override
+    public List<SelectTagListRspVO> selectTagList() {
+        List<SelectTagListRspVO> rspVOS  = new ArrayList<>();
+        for (TagDO tagDO : tagMapper.selectList(null)) {
+            SelectTagListRspVO selectTagListRspVO = new SelectTagListRspVO();
+            selectTagListRspVO.setLabel(tagDO.getName());
+            selectTagListRspVO.setValue(tagDO.getId());
+            rspVOS.add(selectTagListRspVO);
+        }
+        return rspVOS;
     }
 
 

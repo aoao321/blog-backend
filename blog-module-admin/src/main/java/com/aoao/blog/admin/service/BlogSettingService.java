@@ -1,7 +1,7 @@
 package com.aoao.blog.admin.service;
 
-import com.aoao.blog.admin.model.vo.setting.FindBlogSettingsRspVO;
-import com.aoao.blog.admin.model.vo.setting.UpdateBlogSettingsReqVO;
+import com.aoao.blog.common.model.admin.vo.setting.FindBlogSettingsRspVO;
+import com.aoao.blog.common.model.admin.vo.setting.UpdateBlogSettingsReqVO;
 
 import javax.validation.Valid;
 

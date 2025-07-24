@@ -1,20 +1,22 @@
-package com.aoao.blog.admin.model.vo.category;
+package com.aoao.blog.common.model.admin.vo.tag;
 
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author aoao
+ * @create 2025-07-22-10:01
+ */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class FindCategoryPageListRspVO {
+@ApiModel("查询标签出参")
+public class FindTagPageListRspVO {
     /**
      * 分类 ID
      */
     private Long id;
-    
+
     /**
      * 分类名称
      */
@@ -24,5 +26,4 @@ public class FindCategoryPageListRspVO {
      * 创建时间
      */
     private LocalDateTime createTime;
-
 }

@@ -1,20 +1,17 @@
 package com.aoao.blog.admin.controller;
 
-import com.aoao.blog.admin.model.vo.category.AddCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.DeleteCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListRspVO;
+import com.aoao.blog.common.model.admin.vo.category.*;
 import com.aoao.blog.admin.service.CategoryService;
-import com.aoao.blog.common.domain.dos.CategoryDO;
 import com.aoao.blog.common.utils.PageResult;
 import com.aoao.blog.common.utils.Result;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author aoao
@@ -38,8 +35,8 @@ public class CategoryController {
     @PostMapping("/list")
     @ApiOperation(value = "分页查询类型")
     public PageResult<FindCategoryPageListRspVO> listCategory(@RequestBody @Valid FindCategoryPageListReqVO findCategoryPageListReqVO) {
-        PageResult<FindCategoryPageListRspVO> page = categoryService.page(findCategoryPageListReqVO);
-        return page;
+        PageInfo<FindCategoryPageListRspVO> pageInfo = categoryService.page(findCategoryPageListReqVO);
+        return PageResult.success(pageInfo);
     }
 
     @PostMapping("/delete")
@@ -47,6 +44,13 @@ public class CategoryController {
     public Result deleteCategory(@RequestBody @Valid DeleteCategoryReqVO deleteCategoryReqVO) {
         categoryService.deleteCategory(deleteCategoryReqVO);
         return Result.success();
+    }
+
+    @PostMapping("/select/list")
+    @ApiOperation(value = "选择分类列表")
+    public Result<List<SelectCategoryListRspVO>> selectCategoryList(){
+        List<SelectCategoryListRspVO> vos = categoryService.selectList();
+        return Result.success(vos);
     }
 
 

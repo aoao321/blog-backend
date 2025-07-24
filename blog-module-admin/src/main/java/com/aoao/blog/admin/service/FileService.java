@@ -1,6 +1,6 @@
 package com.aoao.blog.admin.service;
 
-import com.aoao.blog.admin.model.vo.file.UploadFileRspVO;
+import com.aoao.blog.common.model.admin.vo.file.UploadFileRspVO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

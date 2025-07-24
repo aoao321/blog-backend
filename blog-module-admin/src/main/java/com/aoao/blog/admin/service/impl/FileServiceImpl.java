@@ -1,19 +1,13 @@
 package com.aoao.blog.admin.service.impl;
 
-import com.aoao.blog.admin.model.vo.file.UploadFileRspVO;
+import com.aoao.blog.common.model.admin.vo.file.UploadFileRspVO;
 import com.aoao.blog.admin.service.FileService;
 import com.aoao.blog.admin.util.MinioUtil;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BizException;
-import com.aoao.blog.common.utils.Result;
-import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author aoao

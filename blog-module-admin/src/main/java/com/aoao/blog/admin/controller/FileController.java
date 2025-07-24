@@ -1,8 +1,7 @@
 package com.aoao.blog.admin.controller;
 
-import com.aoao.blog.admin.model.vo.file.UploadFileRspVO;
+import com.aoao.blog.common.model.admin.vo.file.UploadFileRspVO;
 import com.aoao.blog.admin.service.FileService;
-import com.aoao.blog.common.aspect.ApiOperationLog;
 import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

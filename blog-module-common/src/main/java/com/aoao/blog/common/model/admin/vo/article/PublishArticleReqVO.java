@@ -1,4 +1,4 @@
-package com.aoao.blog.admin.model.vo.article;
+package com.aoao.blog.common.model.admin.vo.article;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;

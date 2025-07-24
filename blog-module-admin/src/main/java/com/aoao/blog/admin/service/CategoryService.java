@@ -1,12 +1,9 @@
 package com.aoao.blog.admin.service;
 
-import com.aoao.blog.admin.model.vo.category.AddCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.DeleteCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListRspVO;
-import com.aoao.blog.common.utils.PageResult;
+import com.aoao.blog.common.model.admin.vo.category.*;
+import com.github.pagehelper.PageInfo;
 
-import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author aoao
@@ -15,7 +12,10 @@ import javax.validation.Valid;
 public interface CategoryService {
     void addCategory(AddCategoryReqVO addCategoryReqVO);
 
-    PageResult<FindCategoryPageListRspVO> page(FindCategoryPageListReqVO findCategoryPageListReqVO);
+    PageInfo<FindCategoryPageListRspVO> page(FindCategoryPageListReqVO findCategoryPageListReqVO);
 
     void deleteCategory( DeleteCategoryReqVO deleteCategoryReqVO);
+
+    List<SelectCategoryListRspVO> selectList();
+
 }

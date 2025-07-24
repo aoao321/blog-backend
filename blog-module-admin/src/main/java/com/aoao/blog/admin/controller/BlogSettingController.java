@@ -1,9 +1,8 @@
 package com.aoao.blog.admin.controller;
 
-import com.aoao.blog.admin.model.vo.setting.FindBlogSettingsRspVO;
-import com.aoao.blog.admin.model.vo.setting.UpdateBlogSettingsReqVO;
+import com.aoao.blog.common.model.admin.vo.setting.FindBlogSettingsRspVO;
+import com.aoao.blog.common.model.admin.vo.setting.UpdateBlogSettingsReqVO;
 import com.aoao.blog.admin.service.BlogSettingService;
-import com.aoao.blog.common.domain.dos.BlogSettingsDO;
 import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

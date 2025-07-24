@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aoao.blog.common.domain.mapper.ArticleMapper">
+
+    <select id="selectDetail" resultType="com.aoao.blog.common.model.admin.vo.article.FindArticleDetailRspVO">
+        SELECT article.*, category.id AS categoryId,content.content
+        FROM t_article article
+                 LEFT JOIN t_article_category_rel ac
+                    ON article.id = ac.article_id
+                 LEFT JOIN t_category category
+                    ON ac.category_id = category.id
+                 LEFT JOIN t_article_content content
+                    ON article.id = content.article_id
+        WHERE article.is_deleted = 0
+          AND category.is_deleted = 0
+          AND article.id = #{articleId}
+    </select>
+</mapper>

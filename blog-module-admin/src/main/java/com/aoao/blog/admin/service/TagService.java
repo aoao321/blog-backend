@@ -1,12 +1,10 @@
 package com.aoao.blog.admin.service;
 
-import com.aoao.blog.admin.model.vo.tag.AddTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.DeleteTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListRspVO;
-import com.aoao.blog.common.utils.PageResult;
+import com.aoao.blog.common.model.admin.vo.tag.*;
+import com.github.pagehelper.PageInfo;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author aoao
@@ -17,5 +15,7 @@ public interface TagService {
 
     void deleteTag(@Valid DeleteTagReqVO deleteTagReqVO);
 
-    PageResult<FindTagPageListRspVO> page(@Valid FindTagPageListReqVO findTagPageListReqVO);
+    PageInfo<FindTagPageListRspVO> page(@Valid FindTagPageListReqVO findTagPageListReqVO);
+
+    List<SelectTagListRspVO> selectTagList();
 }

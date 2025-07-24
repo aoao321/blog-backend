@@ -1,6 +1,6 @@
 package com.aoao.blog.admin.service;
 
-import com.aoao.blog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
+import com.aoao.blog.common.model.admin.vo.user.UpdateAdminUserPasswordReqVO;
 import com.aoao.blog.common.utils.Result;
 
 import javax.validation.Valid;

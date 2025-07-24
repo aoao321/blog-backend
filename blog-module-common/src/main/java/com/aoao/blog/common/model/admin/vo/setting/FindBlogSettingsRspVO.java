@@ -1,4 +1,4 @@
-package com.aoao.blog.admin.model.vo.setting;
+package com.aoao.blog.common.model.admin.vo.setting;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

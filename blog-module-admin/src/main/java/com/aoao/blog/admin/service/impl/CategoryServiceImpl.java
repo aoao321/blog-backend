@@ -1,36 +1,42 @@
 package com.aoao.blog.admin.service.impl;
 
-import com.aoao.blog.admin.model.vo.category.AddCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.DeleteCategoryReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListReqVO;
-import com.aoao.blog.admin.model.vo.category.FindCategoryPageListRspVO;
+import com.aoao.blog.common.domain.dos.ArticleCategoryRelDO;
+import com.aoao.blog.common.domain.mapper.ArticleCategoryRelMapper;
+import com.aoao.blog.common.model.admin.vo.category.*;
 import com.aoao.blog.admin.service.CategoryService;
 import com.aoao.blog.common.domain.dos.CategoryDO;
 import com.aoao.blog.common.domain.mapper.CategoryMapper;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BizException;
-import com.aoao.blog.common.utils.PageResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * @author aoao
  * @create 2025-07-21-19:13
  */
 @Service
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private ArticleCategoryRelMapper articleCategoryRelMapper;
 
     @Override
     public void addCategory(AddCategoryReqVO addCategoryReqVO) {
@@ -48,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageResult<FindCategoryPageListRspVO> page(FindCategoryPageListReqVO findCategoryPageListReqVO) {
+    public PageInfo<FindCategoryPageListRspVO> page(FindCategoryPageListReqVO findCategoryPageListReqVO) {
         PageHelper.startPage(findCategoryPageListReqVO.getCurrent(),
                 findCategoryPageListReqVO.getSize());
         // 根据传入的条件查询
@@ -68,16 +74,40 @@ public class CategoryServiceImpl implements CategoryService {
                 })
                 .collect(Collectors.toList());
         PageInfo<FindCategoryPageListRspVO> pageInfo = new PageInfo<>(vos);
-        return PageResult.success(pageInfo);
+        return pageInfo;
     }
 
     @Override
     public void deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO) {
         Long categoryId = deleteCategoryReqVO.getId();
         CategoryDO categoryDO = categoryMapper.selectById(categoryId);
-        if (categoryDO == null) {
+        if (categoryDO != null) {
+            // 校验该分类下是否已经有文章，若有，则提示需要先删除分类下所有文章，才能删除
+            ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectOne(new QueryWrapper<ArticleCategoryRelDO>()
+                    .eq("category_id",categoryId));
+            if (Objects.nonNull(articleCategoryRelDO)) {
+                log.warn("==> 此分类下包含文章，无法删除，categoryId: {}", categoryId);
+                throw new BizException(ResponseCodeEnum.CATEGORY_CAN_NOT_DELETE);
+            }
+            categoryMapper.deleteById(categoryId);
+        }else {
             throw new BizException(ResponseCodeEnum.CATEGORY_NOT_EXIST);
         }
+    }
+
+    @Override
+    public List<SelectCategoryListRspVO> selectList() {
+        // 查询所有category
+        List<CategoryDO> categoryDOS = categoryMapper.selectList(null);
+        // 转换成vo
+        List<SelectCategoryListRspVO> vos = new ArrayList<>();
+        for (CategoryDO categoryDO : categoryDOS) {
+            SelectCategoryListRspVO selectCategoryListRspVO = new SelectCategoryListRspVO();
+            selectCategoryListRspVO.setLabel(categoryDO.getName());
+            selectCategoryListRspVO.setValue(categoryDO.getId());
+            vos.add(selectCategoryListRspVO);
+        }
+        return vos;
     }
 
 

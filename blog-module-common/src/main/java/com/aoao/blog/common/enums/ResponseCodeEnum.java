@@ -29,10 +29,14 @@ public enum ResponseCodeEnum  {
 
     CATEGORY_EXIST("30001", "该分类已经存在"),
     CATEGORY_NOT_EXIST("30002","该分类不存在" ),
+
     TAG_EXIST("30003", "该标签已经存在"),
     TAG_NOT_EXIST("30004","该标签不存在" ),
 
-    FILE_NOT_EXIST("30005", "上传失败，请重新上传");
+    FILE_NOT_EXIST("30005", "上传失败，请重新上传"),
+    ARTICLE_NOT_EXIST("30006","文章不存在" ),
+    CATEGORY_CAN_NOT_DELETE("30007", "该分类下存在文章，不允许删除"),
+    TAG_CAN_NOT_DELETE("30008","该标签下存在文章，不允许删除" );
 
     ResponseCodeEnum(String errorCode, String errorMessage) {
         this.errorCode = errorCode;

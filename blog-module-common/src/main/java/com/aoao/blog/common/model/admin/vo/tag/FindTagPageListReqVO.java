@@ -1,22 +1,21 @@
-package com.aoao.blog.admin.model.vo.category;
+package com.aoao.blog.common.model.admin.vo.tag;
 
 import com.aoao.blog.common.model.BasePageQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
+/**
+ * @author aoao
+ * @create 2025-07-22-10:00
+ */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ApiModel(value = "查询分类分页数据入参 VO")
-public class FindCategoryPageListReqVO extends BasePageQuery {
-
+@ApiModel("查询标签入参")
+public class FindTagPageListReqVO extends BasePageQuery {
     /**
      * 分类名称
      */
@@ -35,5 +34,4 @@ public class FindCategoryPageListReqVO extends BasePageQuery {
     @FutureOrPresent
     @ApiModelProperty("结束日期")
     private LocalDate endDate;
-
 }

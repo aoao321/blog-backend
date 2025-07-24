@@ -1,6 +1,6 @@
 package com.aoao.blog.admin.service.impl;
 
-import com.aoao.blog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
+import com.aoao.blog.common.model.admin.vo.user.UpdateAdminUserPasswordReqVO;
 import com.aoao.blog.admin.service.AdminUserService;
 import com.aoao.blog.common.domain.dos.UserDO;
 import com.aoao.blog.common.domain.mapper.UserMapper;

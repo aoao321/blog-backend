@@ -1,4 +1,4 @@
-package com.aoao.blog.admin.model.vo.user;
+package com.aoao.blog.common.model.admin.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -21,10 +21,6 @@
             <artifactId>blog-module-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.aoao</groupId>
-            <artifactId>blog-module-admin</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.github.pagehelper</groupId>

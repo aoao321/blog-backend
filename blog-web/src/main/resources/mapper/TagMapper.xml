@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aoao.blog.common.domain.mapper.TagMapper">
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO t_tag (name)
+        VALUES
+        <foreach collection="list" item="tag" separator=",">
+            (#{tag.name})
+        </foreach>
+    </insert>
+
+
+    <select id="selectExist" resultType="com.aoao.blog.common.domain.dos.TagDO">
+        SELECT * FROM t_tag
+        <where>
+            name IN
+            <foreach collection="tags" item="tag" open="(" separator="," close=")">
+                #{tag}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectByArticleId" resultType="java.lang.Long">
+        SELECT t.id FROM t_tag t
+            LEFT JOIN t_article_tag_rel at
+                ON t.id = at.tag_id
+                    WHERE t.is_deleted=0 AND at.article_id=#{articleId}
+    </select>
+</mapper>

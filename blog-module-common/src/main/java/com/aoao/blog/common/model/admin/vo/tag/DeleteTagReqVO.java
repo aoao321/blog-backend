@@ -1,4 +1,4 @@
-package com.aoao.blog.admin.model.vo.tag;
+package com.aoao.blog.common.model.admin.vo.tag;
 
 import lombok.Data;
 

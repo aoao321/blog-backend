@@ -1,18 +1,17 @@
 package com.aoao.blog.admin.controller;
 
-import com.aoao.blog.admin.model.vo.tag.AddTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.DeleteTagReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListReqVO;
-import com.aoao.blog.admin.model.vo.tag.FindTagPageListRspVO;
+import com.aoao.blog.common.model.admin.vo.tag.*;
 import com.aoao.blog.admin.service.TagService;
 import com.aoao.blog.common.utils.PageResult;
 import com.aoao.blog.common.utils.Result;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author aoao
@@ -43,7 +42,15 @@ public class TagController {
     @PostMapping("/list")
     @ApiOperation("分页查询")
     public PageResult<FindTagPageListRspVO> listTag(@RequestBody @Valid FindTagPageListReqVO findTagPageListReqVO) {
-        PageResult<FindTagPageListRspVO> pageResult = tagService.page(findTagPageListReqVO);
-        return pageResult;
+        PageInfo<FindTagPageListRspVO> pageInfo = tagService.page(findTagPageListReqVO);
+        return PageResult.success(pageInfo);
     }
+
+    @PostMapping("/select/list")
+    @ApiOperation("选择标签列表")
+    public Result<List<SelectTagListRspVO>> selectTagList(){
+        List<SelectTagListRspVO> rspVOS = tagService.selectTagList();
+        return Result.success(rspVOS);
+    }
+
 }
