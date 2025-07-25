@@ -72,6 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
         // {name=java, articleId=3, id=2}
         List<Map<String, Object>> categoryList = categoryMapper.selectBatchByArticleIds(articleIds);
         // 将分类按 articleId 分组
+        // {articleId,findCategoryListRspVO对象}
         Map<Long, FindCategoryListRspVO> articleCategoryMap = new HashMap<>();
         for (Map<String, Object> map : categoryList) {
             Long articleId = ((Number) map.get("articleId")).longValue();
