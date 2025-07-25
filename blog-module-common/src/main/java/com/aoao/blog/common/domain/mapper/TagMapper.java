@@ -22,4 +22,7 @@ public interface TagMapper extends BaseMapper<TagDO> {
     List<Long> selectByArticleId(Long articleId);
 
     List<Map<String, Object>> selectBatchByArticleIds(@Param("aIds") List<Long> articleIds);
+
+    List<Map<String, Object>> selectWithArticleTotal();
+
 }

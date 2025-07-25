@@ -18,4 +18,7 @@ import java.util.Map;
 @Mapper
 public interface CategoryMapper extends BaseMapper<CategoryDO> {
     List<Map<String, Object>> selectBatchByArticleIds(@Param("aIds") List<Long> articleIds);
+
+    List<Map<String, Object>> selectWithArticleTotal();
+
 }

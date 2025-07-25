@@ -78,6 +78,7 @@ public class ArticleServiceImpl implements ArticleService {
             FindCategoryListRspVO findCategoryListRspVO = new FindCategoryListRspVO();
             findCategoryListRspVO.setId(((Number) map.get("id")).longValue());
             findCategoryListRspVO.setName((String) map.get("name"));
+            findCategoryListRspVO.setArticlesTotal(0l);
             // 放入map中
             articleCategoryMap.put(articleId, findCategoryListRspVO);
         }
@@ -95,7 +96,7 @@ public class ArticleServiceImpl implements ArticleService {
             Long tagId = ((Number) map.get("id")).longValue();
             String name = (String) map.get("name");
 
-            FindTagListRspVO tag = new FindTagListRspVO(tagId, name);
+            FindTagListRspVO tag = new FindTagListRspVO(tagId, name,0l);
             tagMap.computeIfAbsent(articleId, k -> new ArrayList<>()).add(tag);
         }
         // 填充

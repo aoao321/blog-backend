@@ -43,4 +43,7 @@
                 </if>
             </where>
     </select>
+    <select id="selectWithArticleTotal" resultType="java.util.Map">
+        SELECT t.id,count(*) as articleTotal FROM t_article_tag_rel at,t_tag t WHERE at.tag_id=t.id GROUP BY t.id
+    </select>
 </mapper>
