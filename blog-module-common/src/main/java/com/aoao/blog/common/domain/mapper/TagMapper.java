@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,4 +20,6 @@ public interface TagMapper extends BaseMapper<TagDO> {
     void insertBatch(@Param("list") List<TagDO> tagList);
 
     List<Long> selectByArticleId(Long articleId);
+
+    List<Map<String, Object>> selectBatchByArticleIds(@Param("aIds") List<Long> articleIds);
 }

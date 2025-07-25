@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aoao.blog.common.domain.mapper.CategoryMapper">
+
+    <select id="selectBatchByArticleIds" resultType="Map">
+        SELECT category.id, category.name,ac.article_id AS articleId
+        FROM t_category AS category
+        LEFT JOIN t_article_category_rel ac ON category.id = ac.category_id
+        <where>
+            <if test="aIds != null and aIds.size > 0">
+                AND ac.article_id IN
+                <foreach collection="aIds" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="aIds == null or aIds.size == 0">
+                AND 1 = 0
+            </if>
+        </where>
+    </select>
+</mapper>

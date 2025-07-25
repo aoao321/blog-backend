@@ -1,6 +1,6 @@
 package com.aoao.blog.admin.service.impl;
 
-import com.aoao.blog.admin.service.ArticleService;
+import com.aoao.blog.admin.service.AdminArticleService;
 import com.aoao.blog.common.domain.dos.*;
 import com.aoao.blog.common.domain.mapper.*;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @create 2025-07-22-16:03
  */
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class AdminArticleServiceImpl implements AdminArticleService {
 
     @Autowired
     private ArticleMapper articleMapper;

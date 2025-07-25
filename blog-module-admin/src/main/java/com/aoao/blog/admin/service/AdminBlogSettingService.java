@@ -9,7 +9,7 @@ import javax.validation.Valid;
  * @author aoao
  * @create 2025-07-22-14:54
  */
-public interface BlogSettingService {
+public interface AdminBlogSettingService {
     void updateSetting(@Valid UpdateBlogSettingsReqVO reqVO);
 
     FindBlogSettingsRspVO getDetail();

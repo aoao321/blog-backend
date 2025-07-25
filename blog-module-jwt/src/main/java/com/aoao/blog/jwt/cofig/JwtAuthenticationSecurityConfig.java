@@ -39,7 +39,6 @@ public class JwtAuthenticationSecurityConfig extends SecurityConfigurerAdapter<D
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-
         // 自定义的用于 JWT 身份验证的过滤器
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
         filter.setAuthenticationManager(httpSecurity.getSharedObject(AuthenticationManager.class));

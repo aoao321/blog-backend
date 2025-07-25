@@ -27,4 +27,20 @@
                 ON t.id = at.tag_id
                     WHERE t.is_deleted=0 AND at.article_id=#{articleId}
     </select>
+    <select id="selectBatchByArticleIds" resultType="java.util.Map">
+            SELECT tag.id, tag.name,at.article_id AS articleId
+            FROM t_tag AS tag
+            LEFT JOIN t_article_tag_rel at ON tag.id = at.tag_id
+            <where>
+                <if test="aIds != null and aIds.size > 0">
+                    AND at.article_id IN
+                    <foreach collection="aIds" item="id" open="(" separator="," close=")">
+                        #{id}
+                    </foreach>
+                </if>
+                <if test="aIds == null or aIds.size == 0">
+                    AND 1 = 0
+                </if>
+            </where>
+    </select>
 </mapper>

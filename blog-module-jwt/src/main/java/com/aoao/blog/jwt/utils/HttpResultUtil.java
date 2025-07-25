@@ -3,6 +3,7 @@ package com.aoao.blog.jwt.utils;
 import com.aoao.blog.common.utils.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +14,7 @@ import java.io.PrintWriter;
  * @author aoao
  * @create 2025-07-13-18:13
  */
+@Component
 public class HttpResultUtil {
 
     /**

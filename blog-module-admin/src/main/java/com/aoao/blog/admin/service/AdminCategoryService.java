@@ -9,7 +9,7 @@ import java.util.List;
  * @author aoao
  * @create 2025-07-21-19:13
  */
-public interface CategoryService {
+public interface AdminCategoryService {
     void addCategory(AddCategoryReqVO addCategoryReqVO);
 
     PageInfo<FindCategoryPageListRspVO> page(FindCategoryPageListReqVO findCategoryPageListReqVO);

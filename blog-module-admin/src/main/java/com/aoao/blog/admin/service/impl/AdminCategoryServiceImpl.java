@@ -3,7 +3,7 @@ package com.aoao.blog.admin.service.impl;
 import com.aoao.blog.common.domain.dos.ArticleCategoryRelDO;
 import com.aoao.blog.common.domain.mapper.ArticleCategoryRelMapper;
 import com.aoao.blog.common.model.admin.vo.category.*;
-import com.aoao.blog.admin.service.CategoryService;
+import com.aoao.blog.admin.service.AdminCategoryService;
 import com.aoao.blog.common.domain.dos.CategoryDO;
 import com.aoao.blog.common.domain.mapper.CategoryMapper;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
@@ -23,15 +23,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
-
 /**
  * @author aoao
  * @create 2025-07-21-19:13
  */
 @Service
 @Slf4j
-public class CategoryServiceImpl implements CategoryService {
+public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;

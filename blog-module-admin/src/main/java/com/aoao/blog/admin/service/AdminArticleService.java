@@ -7,7 +7,7 @@ import com.github.pagehelper.PageInfo;
  * @author aoao
  * @create 2025-07-22-16:02
  */
-public interface ArticleService {
+public interface AdminArticleService {
     void publishArticle(PublishArticleReqVO publishArticleReqVO);
 
     void deleteArticle(DeleteArticleReqVO deleteArticleReqVO);

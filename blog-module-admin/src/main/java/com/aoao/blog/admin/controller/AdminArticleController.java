@@ -1,13 +1,12 @@
 package com.aoao.blog.admin.controller;
 
-import com.aoao.blog.admin.service.ArticleService;
+import com.aoao.blog.admin.service.AdminArticleService;
 import com.aoao.blog.common.model.admin.vo.article.*;
 import com.aoao.blog.common.utils.PageResult;
 import com.aoao.blog.common.utils.Result;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,43 +19,43 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/admin/article")
-public class ArticleController {
+public class AdminArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private AdminArticleService adminArticleService;
 
     @PostMapping("/publish")
     @ApiOperation(value = "文章发布")
     public Result publishArticle(@RequestBody @Validated PublishArticleReqVO publishArticleReqVO) {
-        articleService.publishArticle(publishArticleReqVO);
+        adminArticleService.publishArticle(publishArticleReqVO);
         return Result.success();
     }
 
     @PostMapping("/delete")
     @ApiOperation(value = "文章删除")
     public Result deleteArticle(@RequestBody @Validated DeleteArticleReqVO deleteArticleReqVO) {
-        articleService.deleteArticle(deleteArticleReqVO);
+        adminArticleService.deleteArticle(deleteArticleReqVO);
         return Result.success();
     }
 
     @PostMapping("/list")
     @ApiOperation(value = "查询文章分页数据")
     public PageResult<FindArticlePageListRspVO> findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO findArticlePageListReqVO) {
-        PageInfo<FindArticlePageListRspVO> pageInfo = articleService.findArticlePageList(findArticlePageListReqVO);
+        PageInfo<FindArticlePageListRspVO> pageInfo = adminArticleService.findArticlePageList(findArticlePageListReqVO);
         return PageResult.success(pageInfo);
     }
 
     @PostMapping("/detail")
     @ApiOperation(value = "查询文章详情")
     public Result<FindArticleDetailRspVO> findArticleDetail(@RequestBody @Validated FindArticleDetailReqVO findArticleDetailReqVO) {
-        FindArticleDetailRspVO rspVO = articleService.showDetail(findArticleDetailReqVO);
+        FindArticleDetailRspVO rspVO = adminArticleService.showDetail(findArticleDetailReqVO);
         return Result.success(rspVO);
     }
 
     @PostMapping("/update")
     @ApiOperation(value = "更新文章")
     public Result updateArticle(@RequestBody @Validated UpdateArticleReqVO updateArticleReqVO) {
-        articleService.updateArticle(updateArticleReqVO);
+        adminArticleService.updateArticle(updateArticleReqVO);
         return Result.success();
     }
 

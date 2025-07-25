@@ -1,7 +1,7 @@
 package com.aoao.blog.admin.controller;
 
 import com.aoao.blog.common.model.admin.vo.category.*;
-import com.aoao.blog.admin.service.CategoryService;
+import com.aoao.blog.admin.service.AdminCategoryService;
 import com.aoao.blog.common.utils.PageResult;
 import com.aoao.blog.common.utils.Result;
 import com.github.pagehelper.PageInfo;
@@ -20,36 +20,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/category")
 @Api(tags = "Admin 分类模块")
-public class CategoryController {
+public class AdminCategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private AdminCategoryService adminCategoryService;
 
     @PostMapping("/add")
     @ApiOperation(value = "添加分类")
     public Result addCategory(@RequestBody @Valid AddCategoryReqVO addCategoryReqVO) {
-        categoryService.addCategory(addCategoryReqVO);
+        adminCategoryService.addCategory(addCategoryReqVO);
         return Result.success();
     }
 
     @PostMapping("/list")
     @ApiOperation(value = "分页查询类型")
     public PageResult<FindCategoryPageListRspVO> listCategory(@RequestBody @Valid FindCategoryPageListReqVO findCategoryPageListReqVO) {
-        PageInfo<FindCategoryPageListRspVO> pageInfo = categoryService.page(findCategoryPageListReqVO);
+        PageInfo<FindCategoryPageListRspVO> pageInfo = adminCategoryService.page(findCategoryPageListReqVO);
         return PageResult.success(pageInfo);
     }
 
     @PostMapping("/delete")
     @ApiOperation(value = "删除类型")
     public Result deleteCategory(@RequestBody @Valid DeleteCategoryReqVO deleteCategoryReqVO) {
-        categoryService.deleteCategory(deleteCategoryReqVO);
+        adminCategoryService.deleteCategory(deleteCategoryReqVO);
         return Result.success();
     }
 
     @PostMapping("/select/list")
     @ApiOperation(value = "选择分类列表")
     public Result<List<SelectCategoryListRspVO>> selectCategoryList(){
-        List<SelectCategoryListRspVO> vos = categoryService.selectList();
+        List<SelectCategoryListRspVO> vos = adminCategoryService.selectList();
         return Result.success(vos);
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
  * @author aoao
  * @create 2025-07-22-9:36
  */
-public interface TagService {
+public interface AdminTagService {
     void addTag(@Valid AddTagReqVO addTagReqVO);
 
     void deleteTag(@Valid DeleteTagReqVO deleteTagReqVO);

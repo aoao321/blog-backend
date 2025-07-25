@@ -2,7 +2,7 @@ package com.aoao.blog.admin.service.impl;
 
 import com.aoao.blog.common.model.admin.vo.setting.FindBlogSettingsRspVO;
 import com.aoao.blog.common.model.admin.vo.setting.UpdateBlogSettingsReqVO;
-import com.aoao.blog.admin.service.BlogSettingService;
+import com.aoao.blog.admin.service.AdminBlogSettingService;
 import com.aoao.blog.common.domain.dos.BlogSettingsDO;
 import com.aoao.blog.common.domain.mapper.BlogSettingMapper;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @create 2025-07-22-14:54
  */
 @Service
-public class BlogSettingServiceImpl implements BlogSettingService {
+public class AdminBlogSettingServiceImpl implements AdminBlogSettingService {
 
     @Autowired
     private BlogSettingMapper blogSettingMapper;

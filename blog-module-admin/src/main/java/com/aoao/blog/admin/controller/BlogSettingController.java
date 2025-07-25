@@ -2,7 +2,7 @@ package com.aoao.blog.admin.controller;
 
 import com.aoao.blog.common.model.admin.vo.setting.FindBlogSettingsRspVO;
 import com.aoao.blog.common.model.admin.vo.setting.UpdateBlogSettingsReqVO;
-import com.aoao.blog.admin.service.BlogSettingService;
+import com.aoao.blog.admin.service.AdminBlogSettingService;
 import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,19 +24,19 @@ import javax.validation.Valid;
 public class BlogSettingController {
 
     @Autowired
-    private BlogSettingService blogSettingService;
+    private AdminBlogSettingService adminBlogSettingService;
 
     @PostMapping("/update")
     @ApiOperation("更新设置")
     public Result updateSetting(@RequestBody @Valid UpdateBlogSettingsReqVO reqVO) {
-        blogSettingService.updateSetting(reqVO);
+        adminBlogSettingService.updateSetting(reqVO);
         return Result.success();
     }
 
     @PostMapping("/detail")
     @ApiOperation("获取详情")
     public Result<FindBlogSettingsRspVO> detailSetting() {
-        FindBlogSettingsRspVO vo = blogSettingService.getDetail();
+        FindBlogSettingsRspVO vo = adminBlogSettingService.getDetail();
         return Result.success(vo);
     }
 }
