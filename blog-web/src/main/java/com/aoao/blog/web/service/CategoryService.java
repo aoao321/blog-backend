@@ -1,7 +1,9 @@
 package com.aoao.blog.web.service;
 
+import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryVO;
+import com.aoao.blog.common.model.front.vo.category.FindCategoryArticlePageListRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
-import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -11,4 +13,6 @@ import java.util.List;
  */
 public interface CategoryService {
     List<FindCategoryListRspVO> list();
+
+    PageInfo<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(FindArticleWithTypeCategoryVO reqVO);
 }

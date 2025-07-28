@@ -17,6 +17,10 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.aoao</groupId>
             <artifactId>blog-module-common</artifactId>
         </dependency>

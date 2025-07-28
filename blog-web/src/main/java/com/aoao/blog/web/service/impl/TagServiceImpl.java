@@ -1,9 +1,15 @@
 package com.aoao.blog.web.service.impl;
 
+import com.aoao.blog.common.domain.dos.ArticleDO;
 import com.aoao.blog.common.domain.dos.TagDO;
+import com.aoao.blog.common.domain.mapper.ArticleMapper;
 import com.aoao.blog.common.domain.mapper.TagMapper;
+import com.aoao.blog.common.model.front.vo.tag.FindArticleWithTagReqVO;
+import com.aoao.blog.common.model.front.vo.tag.FindTagArticlePageListRspVO;
 import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
 import com.aoao.blog.web.service.TagService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,8 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
 
     @Override
     public List<FindTagListRspVO> list() {
@@ -46,5 +54,21 @@ public class TagServiceImpl implements TagService {
             vo.setArticlesTotal(total);
         }
         return vos;
+    }
+
+    @Override
+    public PageInfo<FindTagArticlePageListRspVO> findArticlePage(FindArticleWithTagReqVO reqVO) {
+        PageHelper.startPage(reqVO.getCurrent(), reqVO.getSize());
+        // 查询标签下的文章
+        List<ArticleDO> articleDOS = articleMapper.selectByTag(reqVO.getId());
+        // 封装vo
+        List<FindTagArticlePageListRspVO> vos = articleDOS.stream().map(articleDO -> {
+            FindTagArticlePageListRspVO vo = new FindTagArticlePageListRspVO();
+            BeanUtils.copyProperties(articleDO, vo);
+            vo.setCreateDate(articleDO.getCreateTime().toLocalDate());
+            return vo;
+        }).collect(Collectors.toList());
+        PageInfo<FindTagArticlePageListRspVO> pageInfo = new PageInfo<>(vos);
+        return pageInfo;
     }
 }

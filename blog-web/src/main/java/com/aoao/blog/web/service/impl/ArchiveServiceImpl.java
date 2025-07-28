@@ -46,7 +46,7 @@ public class ArchiveServiceImpl implements ArchiveService {
             return vo;
         }).collect(Collectors.toList());
 
-        // 封装成FindArchiveArticlePageListRspVO {2025-03 : list }
+        // 封装成FindArchiveArticlePageListRspVO {2025-03 : List }
         Map<YearMonth,List<FindArchiveArticleRspVO>> map = new HashMap<>();
         for (FindArchiveArticleRspVO vo : vos) {
            // 如果FindArchiveArticlePageListRspVO已经存在当前年月，就直接articles.add(),如果没有就new ArrayList()
@@ -61,9 +61,7 @@ public class ArchiveServiceImpl implements ArchiveService {
             return groupVO;
         }).collect(Collectors.toList());
 
-
         PageInfo<FindArchiveArticlePageListRspVO> pageInfo = new PageInfo<>(result);
-
         return pageInfo;
     }
 }

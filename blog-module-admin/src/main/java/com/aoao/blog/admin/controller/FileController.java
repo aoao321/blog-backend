@@ -26,7 +26,7 @@ public class FileController {
 
     @PostMapping("/upload")
     @ApiOperation(value = "文件上传")
-    public Result<UploadFileRspVO> uploadFile(@RequestParam MultipartFile file) {
+    public Result<UploadFileRspVO> uploadFile(@RequestParam("file") MultipartFile file) {
         UploadFileRspVO vo = fileService.uploadFile(file);
         return Result.success(vo);
     }

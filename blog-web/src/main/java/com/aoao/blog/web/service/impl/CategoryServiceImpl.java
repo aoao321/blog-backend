@@ -1,16 +1,19 @@
 package com.aoao.blog.web.service.impl;
 
+import com.aoao.blog.common.domain.dos.ArticleDO;
 import com.aoao.blog.common.domain.dos.CategoryDO;
-import com.aoao.blog.common.domain.dos.TagDO;
+import com.aoao.blog.common.domain.mapper.ArticleMapper;
 import com.aoao.blog.common.domain.mapper.CategoryMapper;
+import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryVO;
+import com.aoao.blog.common.model.front.vo.category.FindCategoryArticlePageListRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
-import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
 import com.aoao.blog.web.service.CategoryService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
 
     @Override
     public List<FindCategoryListRspVO> list() {
@@ -49,5 +54,21 @@ public class CategoryServiceImpl implements CategoryService {
             vo.setArticlesTotal(total);
         }
         return vos;
+    }
+
+    @Override
+    public PageInfo<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(FindArticleWithTypeCategoryVO reqVO) {
+        PageHelper.startPage(reqVO.getCurrent(), reqVO.getSize());
+        Long typeId = reqVO.getId();
+        // 查询
+        List<ArticleDO> articleDOList = articleMapper.selectByCategory(typeId);
+        List<FindCategoryArticlePageListRspVO> vos = articleDOList.stream().map(articleDO -> {
+            FindCategoryArticlePageListRspVO vo = new FindCategoryArticlePageListRspVO();
+            BeanUtils.copyProperties(articleDO, vo);
+            vo.setCreateDate(articleDO.getCreateTime().toLocalDate());
+            return vo;
+        }).collect(Collectors.toList());
+        PageInfo<FindCategoryArticlePageListRspVO> pageInfo = new PageInfo<>(vos);
+        return pageInfo;
     }
 }
