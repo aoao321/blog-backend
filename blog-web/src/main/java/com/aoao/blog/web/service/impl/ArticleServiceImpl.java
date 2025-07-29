@@ -11,6 +11,7 @@ import com.aoao.blog.common.model.front.vo.article.FindIndexArticlePageListRspVO
 import com.aoao.blog.common.model.front.vo.article.FindPreNextArticleRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
+import com.aoao.blog.web.event.ReadArticleEvent;
 import com.aoao.blog.web.markdown.MarkdownHelper;
 import com.aoao.blog.web.service.ArticleService;
 import com.aoao.blog.web.service.TagService;
@@ -20,7 +21,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -44,7 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleContentMapper articleContentMapper;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ApplicationEventPublisher eventPublisher;
 
 
     @Override
@@ -125,6 +126,8 @@ public class ArticleServiceImpl implements ArticleService {
                     .build();
             vo.setNextArticle(nextArticleVO);
         }
+        // 发布文章阅读事件
+        eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
         return vo;
     }
 

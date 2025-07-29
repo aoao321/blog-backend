@@ -79,11 +79,6 @@
     <!-- 统一依赖管理 -->
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>io.lettuce</groupId>
-                <artifactId>lettuce-core</artifactId>
-                <version>6.1.6.RELEASE</version>
-            </dependency>
             <!-- Markdown 解析 -->
             <dependency>
                 <groupId>org.commonmark</groupId>
