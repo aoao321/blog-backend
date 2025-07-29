@@ -1,6 +1,7 @@
 package com.aoao.blog.admin.service.impl;
 
 import com.aoao.blog.admin.service.AdminArticleService;
+import com.aoao.blog.common.constant.RedisConstant;
 import com.aoao.blog.common.domain.dos.*;
 import com.aoao.blog.common.domain.mapper.*;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
@@ -14,6 +15,8 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,10 +44,17 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void publishArticle(PublishArticleReqVO publishArticleReqVO) {
+        // 删除redis中数据
+        Set<String> keys = stringRedisTemplate.keys(RedisConstant.CACHE_ARTICLE_PAGE_KEY+"*");
+        if (keys != null && !keys.isEmpty()) {
+            stringRedisTemplate.delete(keys);
+        }
 
         // 存入文章大概再根据主键插入文本
         ArticleDO articleDO = new ArticleDO();
@@ -77,6 +87,11 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteArticle(DeleteArticleReqVO deleteArticleReqVO) {
+        // 删除redis中数据
+        Set<String> keys = stringRedisTemplate.keys(RedisConstant.CACHE_ARTICLE_PAGE_KEY+"*");
+        if (keys != null && !keys.isEmpty()) {
+            stringRedisTemplate.delete(keys);
+        }
         // 删除关联的表，再删除文章表
         Long articleId = deleteArticleReqVO.getId();
         ArticleDO articleDO = articleMapper.selectById(articleId);
@@ -135,6 +150,11 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Override
     @Transactional
     public void updateArticle(UpdateArticleReqVO updateArticleReqVO) {
+        // 删除redis中数据
+        Set<String> keys = stringRedisTemplate.keys(RedisConstant.CACHE_ARTICLE_PAGE_KEY+"*");
+        if (keys != null && !keys.isEmpty()) {
+            stringRedisTemplate.delete(keys);
+        }
         // 更新文章表
         Long id = updateArticleReqVO.getId();
         ArticleDO article = articleMapper.selectById(id);

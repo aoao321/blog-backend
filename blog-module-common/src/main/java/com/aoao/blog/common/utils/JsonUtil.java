@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.stereotype.Component;
 
 /**
  * @author aoao
  * @create 2025-07-08-18:00
  */
+@Component
 public class JsonUtil {
 
     private static final ObjectMapper INSTANCE = new ObjectMapper()

@@ -1,5 +1,6 @@
 package com.aoao.blog.web.service.impl;
 
+import com.aoao.blog.common.constant.RedisConstant;
 import com.aoao.blog.common.domain.dos.*;
 import com.aoao.blog.common.domain.mapper.*;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
@@ -11,20 +12,25 @@ import com.aoao.blog.common.model.front.vo.article.FindIndexArticlePageListRspVO
 import com.aoao.blog.common.model.front.vo.article.FindPreNextArticleRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
+import com.aoao.blog.common.utils.JsonUtil;
 import com.aoao.blog.web.event.ReadArticleEvent;
 import com.aoao.blog.web.markdown.MarkdownHelper;
 import com.aoao.blog.web.service.ArticleService;
 import com.aoao.blog.web.service.TagService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.type.TypeReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -46,16 +52,31 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleContentMapper articleContentMapper;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
 
     @Override
     public PageInfo<FindIndexArticlePageListRspVO> page(BasePageQuery query) {
+        // 定义redisKey
+        String key = RedisConstant.CACHE_ARTICLE_PAGE_KEY + query.getCurrent() + ":" + query.getSize();
+        // 查询redis，如果有就返回
+        String pageJSON = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isNotBlank(pageJSON)) {
+            if ("".equals(pageJSON)) {
+                // 空对象标记，避免穿透
+                return new PageInfo<>(Collections.emptyList());
+            }
+            return JsonUtil.toBean(pageJSON,PageInfo.class);
+        }
         // 开启分页
         PageHelper.startPage(query.getCurrent(), query.getSize());
         List<ArticleDO> articleList = articleMapper.selectList(new QueryWrapper<ArticleDO>()
                 .orderByDesc("create_time"));
 
         if (articleList == null || articleList.isEmpty()) {
+            // 写入空，设置两分钟过期时间
+            stringRedisTemplate.opsForValue().set(key, null, 2, TimeUnit.MINUTES);
             return new PageInfo<>(Collections.emptyList());
         }
 
@@ -63,6 +84,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         // 构建分页信息，注意这里用 voList 构造 PageInfo
         PageInfo<FindIndexArticlePageListRspVO> pageInfo = new PageInfo<>(voList);
+        // 存入redis
+        stringRedisTemplate.opsForValue().set(key,JsonUtil.toJson(pageInfo));
         return pageInfo;
     }
 
@@ -128,6 +151,11 @@ public class ArticleServiceImpl implements ArticleService {
         }
         // 发布文章阅读事件
         eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
+
+        String key = RedisConstant.CACHE_ARTICLE_VIEW_NUM_KEY;
+        Object count = stringRedisTemplate.opsForHash().get(key, articleId.toString());
+        long viewCount = count == null ? 0L : Long.parseLong(count.toString());
+        vo.setReadNum(viewCount);
         return vo;
     }
 
