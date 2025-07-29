@@ -12,8 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +32,8 @@ class BlogWebApplicationTests {
     private UserRoleMapper userRoleMapper;
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
 
     @Test
@@ -54,5 +60,14 @@ class BlogWebApplicationTests {
         }).collect(Collectors.toList());
         System.out.println(findArchiveArticleRspVOList);
     }
+
+    @Test
+    void testRedis() {
+       stringRedisTemplate.opsForValue().set("test","test");
+        System.out.println(stringRedisTemplate.opsForValue().get("test"));
+    }
+
+
+
 
 }

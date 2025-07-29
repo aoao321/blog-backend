@@ -1,6 +1,8 @@
 package com.aoao.blog.web.service;
 
 import com.aoao.blog.common.model.BasePageQuery;
+import com.aoao.blog.common.model.front.vo.article.FindArticleDetailReqVO;
+import com.aoao.blog.common.model.front.vo.article.FindArticleDetailRspVO;
 import com.aoao.blog.common.model.front.vo.article.FindIndexArticlePageListRspVO;
 import com.github.pagehelper.PageInfo;
 
@@ -10,4 +12,6 @@ import com.github.pagehelper.PageInfo;
  */
 public interface ArticleService {
     PageInfo<FindIndexArticlePageListRspVO> page(BasePageQuery query);
+
+    FindArticleDetailRspVO detail(FindArticleDetailReqVO findArticleDetailReqVO);
 }

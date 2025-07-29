@@ -1,20 +1,26 @@
 package com.aoao.blog.web.service.impl;
 
-import com.aoao.blog.common.domain.dos.ArticleDO;
-import com.aoao.blog.common.domain.mapper.ArticleCategoryRelMapper;
-import com.aoao.blog.common.domain.mapper.ArticleMapper;
-import com.aoao.blog.common.domain.mapper.CategoryMapper;
-import com.aoao.blog.common.domain.mapper.TagMapper;
+import com.aoao.blog.common.domain.dos.*;
+import com.aoao.blog.common.domain.mapper.*;
+import com.aoao.blog.common.enums.ResponseCodeEnum;
+import com.aoao.blog.common.exception.BizException;
 import com.aoao.blog.common.model.BasePageQuery;
+import com.aoao.blog.common.model.front.vo.article.FindArticleDetailReqVO;
+import com.aoao.blog.common.model.front.vo.article.FindArticleDetailRspVO;
 import com.aoao.blog.common.model.front.vo.article.FindIndexArticlePageListRspVO;
+import com.aoao.blog.common.model.front.vo.article.FindPreNextArticleRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
+import com.aoao.blog.web.markdown.MarkdownHelper;
 import com.aoao.blog.web.service.ArticleService;
+import com.aoao.blog.web.service.TagService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,6 +41,11 @@ public class ArticleServiceImpl implements ArticleService {
     private CategoryMapper categoryMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleContentMapper articleContentMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 
     @Override
     public PageInfo<FindIndexArticlePageListRspVO> page(BasePageQuery query) {
@@ -52,6 +63,69 @@ public class ArticleServiceImpl implements ArticleService {
         // 构建分页信息，注意这里用 voList 构造 PageInfo
         PageInfo<FindIndexArticlePageListRspVO> pageInfo = new PageInfo<>(voList);
         return pageInfo;
+    }
+
+    @Override
+    public FindArticleDetailRspVO detail(FindArticleDetailReqVO findArticleDetailReqVO) {
+        // 获取文章id
+        Long articleId = findArticleDetailReqVO.getArticleId();
+        // 查询文章表
+        ArticleDO articleDO = articleMapper.selectById(articleId);
+        if (articleDO == null) {
+            throw new BizException(ResponseCodeEnum.ARTICLE_NOT_EXIST);
+        }
+        // 查询文章内容
+        ArticleContentDO articleContentDO = articleContentMapper.selectOne(new QueryWrapper<ArticleContentDO>()
+                .eq("article_id", articleId));
+        // DO 转 VO
+        FindArticleDetailRspVO vo = FindArticleDetailRspVO.builder()
+                .title(articleDO.getTitle())
+                .createTime(articleDO.getCreateTime())
+                .content(MarkdownHelper.convertMarkdown2Html(articleContentDO.getContent()))
+                .readNum(articleDO.getReadNum())
+                .build();
+        // 查询文章分类
+        ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectByArticleId(articleId);
+        CategoryDO categoryDO = categoryMapper.selectById(articleCategoryRelDO.getCategoryId());
+        vo.setCategoryName(categoryDO.getName());
+        vo.setCategoryId(categoryDO.getId());
+        // 查询标签
+        List<Long> tagIds = tagMapper.selectByArticleId(articleId);
+        List<TagDO> tags = tagMapper.selectList(new QueryWrapper<TagDO>().in("id", tagIds));
+        List<FindTagListRspVO> tagVos = tags.stream().map(tag -> {
+            FindTagListRspVO findTagListRspVO = new FindTagListRspVO();
+            BeanUtils.copyProperties(tag, findTagListRspVO);
+            return findTagListRspVO;
+        }).collect(Collectors.toList());
+        // 设置标签
+        vo.setTags(tagVos);
+        // 查询上下文
+        // 上一篇
+        ArticleDO preArticleDO = articleMapper.selectOne(Wrappers.<ArticleDO>lambdaQuery()
+                .orderByAsc(ArticleDO::getId) // 按文章 ID 升序排列
+                .gt(ArticleDO::getId, articleId) // 查询比当前文章 ID 大的
+                .last("limit 1"));
+        if (Objects.nonNull(preArticleDO)) {
+            FindPreNextArticleRspVO preArticleVO = FindPreNextArticleRspVO.builder()
+                    .articleId(preArticleDO.getId())
+                    .articleTitle(preArticleDO.getTitle())
+                    .build();
+            vo.setPreArticle(preArticleVO);
+        }
+
+        // 下一篇
+        ArticleDO nextArticleDO = articleMapper.selectOne(Wrappers.<ArticleDO>lambdaQuery()
+                .orderByDesc(ArticleDO::getId) // 按文章 ID 倒序排列
+                .lt(ArticleDO::getId, articleId) // 查询比当前文章 ID 小的
+                .last("limit 1"));
+        if (Objects.nonNull(nextArticleDO)) {
+            FindPreNextArticleRspVO nextArticleVO = FindPreNextArticleRspVO.builder()
+                    .articleId(nextArticleDO.getId())
+                    .articleTitle(nextArticleDO.getTitle())
+                    .build();
+            vo.setNextArticle(nextArticleVO);
+        }
+        return vo;
     }
 
     private List<FindIndexArticlePageListRspVO> buildArticleVOListWithCategoryAndTag(List<ArticleDO> articleList) {
@@ -97,7 +171,7 @@ public class ArticleServiceImpl implements ArticleService {
             Long tagId = ((Number) map.get("id")).longValue();
             String name = (String) map.get("name");
 
-            FindTagListRspVO tag = new FindTagListRspVO(tagId, name,0l);
+            FindTagListRspVO tag = new FindTagListRspVO(tagId, name, 0l);
             tagMap.computeIfAbsent(articleId, k -> new ArrayList<>()).add(tag);
         }
         // 填充
@@ -107,5 +181,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         return voList;
     }
+
 
 }
