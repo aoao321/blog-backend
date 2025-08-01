@@ -36,7 +36,8 @@ public enum ResponseCodeEnum  {
     FILE_NOT_EXIST("30005", "上传失败，请重新上传"),
     ARTICLE_NOT_EXIST("30006","文章不存在" ),
     CATEGORY_CAN_NOT_DELETE("30007", "该分类下存在文章，不允许删除"),
-    TAG_CAN_NOT_DELETE("30008","该标签下存在文章，不允许删除" );
+    TAG_CAN_NOT_DELETE("30008","该标签下存在文章，不允许删除" ),
+    NOTICE_MAX("30009","最多只允许展示三条公告" );
 
     ResponseCodeEnum(String errorCode, String errorMessage) {
         this.errorCode = errorCode;

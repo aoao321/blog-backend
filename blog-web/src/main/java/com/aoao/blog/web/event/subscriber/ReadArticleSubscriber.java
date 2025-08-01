@@ -15,8 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ReadArticleSubscriber implements ApplicationListener<ReadArticleEvent> {
 
-    @Autowired
-    private ArticleMapper articleMapper;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
