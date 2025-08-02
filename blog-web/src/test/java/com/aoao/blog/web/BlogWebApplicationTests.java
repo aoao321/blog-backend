@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.coyote.http11.Constants.a;
 
 @SpringBootTest
 @Slf4j
@@ -66,6 +66,12 @@ class BlogWebApplicationTests {
        stringRedisTemplate.opsForValue().set("test","test");
         System.out.println(stringRedisTemplate.opsForValue().get("test"));
     }
+
+    @Test
+    void testRedis2() {
+
+    }
+
 
 
 

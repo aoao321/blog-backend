@@ -17,4 +17,10 @@
           AND category.is_deleted = 0
           AND article.id = #{articleId}
     </select>
+    <select id="selectCountHalfaYear" resultType="com.aoao.blog.common.domain.dos.ArticlePublishCountDO">
+        SELECT DATE(create_time) AS date, COUNT(*) AS count
+        FROM t_article
+        WHERE create_time &gt;= #{passday} AND create_time &lt; #{today}
+        GROUP BY DATE(create_time)
+    </select>
 </mapper>

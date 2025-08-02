@@ -2,12 +2,14 @@ package com.aoao.blog.common.domain.mapper;
 
 
 import com.aoao.blog.common.domain.dos.ArticleDO;
+import com.aoao.blog.common.domain.dos.ArticlePublishCountDO;
 import com.aoao.blog.common.model.admin.vo.article.FindArticleDetailRspVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -26,4 +28,6 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
 
     @Update("UPDATE t_article SET read_num = #{readView} WHERE id = #{id}")
     void updateViewCount(@Param("id") Long articleId,@Param("readView") Long viewCount);
+
+    List<ArticlePublishCountDO> selectCountHalfaYear(@Param("today") LocalDate today,@Param("passday") LocalDate passday);
 }

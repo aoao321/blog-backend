@@ -1,13 +1,19 @@
 package com.aoao.blog.web.task;
 
 import com.aoao.blog.common.constant.RedisConstant;
+import com.aoao.blog.common.domain.dos.StatisticsArticlePVDO;
 import com.aoao.blog.common.domain.mapper.ArticleMapper;
+import com.aoao.blog.common.domain.mapper.StatisticsArticlePVMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -16,9 +22,11 @@ import java.util.Map;
 public class ViewCountSyncTask {
 
     @Autowired
-    private  StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
     @Autowired
-    private  ArticleMapper articleMapper;
+    private ArticleMapper articleMapper;
+    @Autowired
+    private StatisticsArticlePVMapper statisticsArticlePVMapper;
 
     private String key = RedisConstant.CACHE_ARTICLE_VIEW_NUM_KEY;
 
@@ -40,5 +48,34 @@ public class ViewCountSyncTask {
         }
 
         log.info("同步文章阅读量完成，共 {} 条", viewCountMap.size());
+    }
+
+    @Scheduled(cron = "0 25 10 * * ?")
+    public void syncViewCountTOPVTable() {
+        // 获取当天pv
+        LocalDate localDate = LocalDate.now();
+        List<Object> values = stringRedisTemplate.opsForHash().values(key);
+        long count = 0;
+        for (Object value : values) {
+            long view = Long.valueOf(value.toString());
+            count += view;
+        }
+        // 获得上一天的pv
+        LocalDate yesterday = localDate.minusDays(1);
+        StatisticsArticlePVDO yesterPVDO = statisticsArticlePVMapper.selectOne(new QueryWrapper<StatisticsArticlePVDO>()
+                .eq("pv_date", yesterday));
+       Long yesterPV = (yesterPVDO == null || yesterPVDO.getPvCount() == null)
+               ? 0L
+               : yesterPVDO.getPvCount();
+
+        StatisticsArticlePVDO statisticsArticlePVDO = new StatisticsArticlePVDO();
+        statisticsArticlePVDO.setPvDate(localDate);
+        // 上一天pv等于null
+        if(yesterPV == null){
+            statisticsArticlePVDO.setPvCount(count);
+        }else {
+            statisticsArticlePVDO.setPvCount(count-yesterPV);
+        }
+        statisticsArticlePVMapper.insert(statisticsArticlePVDO);
     }
 }
