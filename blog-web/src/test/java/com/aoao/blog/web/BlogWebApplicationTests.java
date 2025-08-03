@@ -69,7 +69,14 @@ class BlogWebApplicationTests {
 
     @Test
     void testRedis2() {
-
+        // 获取过去七天日期集合
+        LocalDate today = LocalDate.now();
+        LocalDate minusWeeks = today.minusDays(7);
+        List<LocalDate> dateList = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            dateList.add(minusWeeks.plusDays(i));
+        }
+        System.out.println(dateList);
     }
 
 

@@ -1,5 +1,6 @@
 package com.aoao.blog.admin.service;
 
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardPVRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsInfoRspVO;
 
 import java.time.LocalDate;
@@ -13,4 +14,6 @@ public interface AdminDashBoardService {
     FindDashboardStatisticsInfoRspVO statistics();
 
     Map<LocalDate, Long> publishArticleStatistics();
+
+    FindDashboardPVRspVO pvStatistics();
 }

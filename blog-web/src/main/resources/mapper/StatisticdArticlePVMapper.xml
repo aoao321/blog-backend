@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aoao.blog.common.domain.mapper.StatisticsArticlePVMapper">
+
+
+    <select id="selectPVCount" resultType="com.aoao.blog.common.domain.dos.StatisticsArticlePVDO">
+        SELECT pv_date AS pvDate, pv_count AS pvCount
+        FROM t_statistics_article_pv
+        WHERE pv_date IN
+        <foreach collection="dateList" item="date" open="(" separator="," close=")">
+            #{date}
+        </foreach>
+    </select>
+</mapper>

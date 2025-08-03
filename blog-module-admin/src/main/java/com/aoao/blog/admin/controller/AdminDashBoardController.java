@@ -1,6 +1,7 @@
 package com.aoao.blog.admin.controller;
 
 import com.aoao.blog.admin.service.AdminDashBoardService;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardPVRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsInfoRspVO;
 import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
@@ -38,4 +39,12 @@ public class AdminDashBoardController {
         Map<LocalDate, Long> map = adminDashBoardService.publishArticleStatistics();
         return Result.success(map);
     }
+
+    @PostMapping("/pv/statistics")
+    @ApiOperation(value = "获取后台仪表盘pv信息")
+    public Result<FindDashboardPVRspVO> pvStatistics() {
+        FindDashboardPVRspVO vo = adminDashBoardService.pvStatistics();
+        return Result.success(vo);
+    }
+
 }

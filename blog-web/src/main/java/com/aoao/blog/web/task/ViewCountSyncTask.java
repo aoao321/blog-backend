@@ -50,7 +50,7 @@ public class ViewCountSyncTask {
         log.info("同步文章阅读量完成，共 {} 条", viewCountMap.size());
     }
 
-    @Scheduled(cron = "0 25 10 * * ?")
+    @Scheduled(cron = "0 30 11 * * ?")
     public void syncViewCountTOPVTable() {
         // 获取当天pv
         LocalDate localDate = LocalDate.now();
