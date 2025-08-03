@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import static com.aoao.blog.common.constant.RedisConstant.CACHE_ARTICLE_VIEW_NUM_KEY;
 
 @Component
 @RequiredArgsConstructor
@@ -28,11 +31,12 @@ public class ViewCountSyncTask {
     @Autowired
     private StatisticsArticlePVMapper statisticsArticlePVMapper;
 
-    private String key = RedisConstant.CACHE_ARTICLE_VIEW_NUM_KEY;
+    private String viewNumKey = CACHE_ARTICLE_VIEW_NUM_KEY;
+    private String PVKey = RedisConstant.PV_KEY;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每 10 分钟执行一次
+    @Scheduled(cron = "0 0/30 * * * ?") // 每 30 分钟执行一次
     public void syncViewCountToDb() {
-        Map<Object, Object> viewCountMap = stringRedisTemplate.opsForHash().entries(key);
+        Map<Object, Object> viewCountMap = stringRedisTemplate.opsForHash().entries(viewNumKey);
         if (viewCountMap == null || viewCountMap.isEmpty()) {
             log.info("文章访问量为空，无需同步");
             return;
@@ -40,10 +44,13 @@ public class ViewCountSyncTask {
         for (Map.Entry<Object, Object> entry : viewCountMap.entrySet()) {
             try {
                 Long articleId = Long.valueOf(entry.getKey().toString());
-                Long viewCount = Long.valueOf(entry.getValue().toString());
-                articleMapper.updateViewCount(articleId, viewCount);
+                Long viewIncr = Long.valueOf(entry.getValue().toString());
+                articleMapper.incrViewCount(articleId, viewIncr);
             } catch (Exception e) {
                 log.error("同步文章 [{}] 阅读量失败", entry.getKey(), e);
+            }finally {
+                // 清空 Redis 计数器
+                stringRedisTemplate.delete(viewNumKey);
             }
         }
 
@@ -52,30 +59,17 @@ public class ViewCountSyncTask {
 
     @Scheduled(cron = "0 30 11 * * ?")
     public void syncViewCountTOPVTable() {
-        // 获取当天pv
-        LocalDate localDate = LocalDate.now();
-        List<Object> values = stringRedisTemplate.opsForHash().values(key);
-        long count = 0;
-        for (Object value : values) {
-            long view = Long.valueOf(value.toString());
-            count += view;
-        }
-        // 获得上一天的pv
-        LocalDate yesterday = localDate.minusDays(1);
-        StatisticsArticlePVDO yesterPVDO = statisticsArticlePVMapper.selectOne(new QueryWrapper<StatisticsArticlePVDO>()
-                .eq("pv_date", yesterday));
-       Long yesterPV = (yesterPVDO == null || yesterPVDO.getPvCount() == null)
-               ? 0L
-               : yesterPVDO.getPvCount();
-
+        // 获取到今天的pv插入数据库中
+        LocalDate today = LocalDate.now();
+        String pvStr = (String)stringRedisTemplate.opsForHash().get(PVKey, today.toString());
+        Long pv = Long.valueOf(pvStr);
         StatisticsArticlePVDO statisticsArticlePVDO = new StatisticsArticlePVDO();
-        statisticsArticlePVDO.setPvDate(localDate);
-        // 上一天pv等于null
-        if(yesterPV == null){
-            statisticsArticlePVDO.setPvCount(count);
-        }else {
-            statisticsArticlePVDO.setPvCount(count-yesterPV);
-        }
+        statisticsArticlePVDO.setPvDate(today);
+        statisticsArticlePVDO.setPvCount(pv);
+        // 插入表中
         statisticsArticlePVMapper.insert(statisticsArticlePVDO);
+        // 删除昨天的记录
+        LocalDate yesterday = today.plusDays(1);
+        stringRedisTemplate.opsForHash().delete(PVKey, yesterday.toString());
     }
 }

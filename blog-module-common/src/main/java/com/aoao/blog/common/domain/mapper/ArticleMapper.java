@@ -23,11 +23,8 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
     @Select("SELECT a.* FROM t_article a LEFT JOIN t_article_tag_rel atr ON a.id = atr.article_id WHERE atr.tag_id = #{tagId} AND a.is_deleted=0")
     List<ArticleDO> selectByTag(Long tagId);
 
-    @Update("Update t_article SET read_num = read_num+1 WHERE id=#{aricleId}")
-    void increaseReadNum(Long articleId);
-
-    @Update("UPDATE t_article SET read_num = #{readView} WHERE id = #{id}")
-    void updateViewCount(@Param("id") Long articleId,@Param("readView") Long viewCount);
+    @Update("UPDATE t_article SET read_num = read_num+#{incr} WHERE id = #{id}")
+    void incrViewCount(@Param("id") Long articleId,@Param("incr") Long viewIncr);
 
     List<ArticlePublishCountDO> selectCountHalfaYear(@Param("today") LocalDate today,@Param("passday") LocalDate passday);
 }
