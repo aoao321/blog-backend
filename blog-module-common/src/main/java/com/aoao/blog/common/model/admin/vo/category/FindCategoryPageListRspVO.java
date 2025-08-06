@@ -25,4 +25,6 @@ public class FindCategoryPageListRspVO {
      */
     private LocalDateTime createTime;
 
+    private Long articlesTotal;
+
 }

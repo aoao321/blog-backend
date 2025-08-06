@@ -8,6 +8,7 @@ import com.aoao.blog.common.domain.dos.CategoryDO;
 import com.aoao.blog.common.domain.mapper.CategoryMapper;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BizException;
+import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -71,6 +70,20 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
                     return vo;
                 })
                 .collect(Collectors.toList());
+        // 统计标签下的文章数量 {id=7,count(*)=2}
+        List<Map<String,Object>> categoryMapList = categoryMapper.selectWithArticleTotal();
+        HashMap<Long, Long> articleTotalMap = new HashMap<>();
+        for (Map<String, Object> map : categoryMapList) {
+            Long id = ((Number) map.get("id")).longValue();
+            Long articleTotal = ((Long) map.get("articleTotal")).longValue();
+            articleTotalMap.put(id, articleTotal);
+        }
+        // 合并文章数量到 VO
+        for (FindCategoryPageListRspVO vo : vos) {
+            Long total = articleTotalMap.getOrDefault(vo.getId(), 0L);
+            vo.setArticlesTotal(total);
+        }
+
         PageInfo<FindCategoryPageListRspVO> pageInfo = new PageInfo<>(vos);
         return pageInfo;
     }

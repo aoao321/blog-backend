@@ -21,6 +21,10 @@
         </where>
     </select>
     <select id="selectWithArticleTotal" resultType="java.util.Map">
-        SELECT c.id,count(*) as articleTotal FROM t_article_tag_rel ac,t_category c WHERE ac.tag_id=c.id GROUP BY c.id
+        SELECT c.id, c.name, COUNT(a.id) AS articleTotal
+        FROM t_category c
+                 LEFT JOIN t_article_category_rel a ON c.id = a.category_id AND c.is_deleted = 0
+        WHERE c.is_deleted = 0
+        GROUP BY c.id, c.name
     </select>
 </mapper>

@@ -8,6 +8,7 @@ import com.aoao.blog.common.domain.dos.TagDO;
 import com.aoao.blog.common.domain.mapper.TagMapper;
 import com.aoao.blog.common.enums.ResponseCodeEnum;
 import com.aoao.blog.common.exception.BizException;
+import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -80,14 +79,31 @@ public class AdminTagServiceImpl implements AdminTagService {
         PageHelper.startPage(findTagPageListReqVO.getCurrent(), findTagPageListReqVO.getSize());
         List<TagDO> tagDOS = tagMapper.selectList(new QueryWrapper<TagDO>()
                 .like(StringUtil.isNotEmpty(name), "name", name)
-                .gt("create_time", startDate)
-                .lt("create_time", endDate));
+                .gt(startDate!=null,"create_time", startDate)
+                .lt(startDate!=null,"create_time", endDate));
+
+
         // 封装成rspVO对象
         List<FindTagPageListRspVO> findTagPageListRspVOList = tagDOS.stream().map(tagDO -> {
             FindTagPageListRspVO vo = new FindTagPageListRspVO();
             BeanUtils.copyProperties(tagDO, vo);
             return vo;
         }).collect(Collectors.toList());
+
+        // 统计标签下的文章数量 {id=7,count(*)=2}
+        List<Map<String,Object>> tagMapList = tagMapper.selectWithArticleTotal();
+        HashMap<Long, Long> articleTotalMap = new HashMap<>();
+        for (Map<String, Object> map : tagMapList) {
+            Long id = ((Number) map.get("id")).longValue();
+            Long articleTotal = ((Long) map.get("articleTotal")).longValue();
+            articleTotalMap.put(id, articleTotal);
+        }
+        // 合并文章数量到 VO
+        for (FindTagPageListRspVO vo : findTagPageListRspVOList) {
+            Long total = articleTotalMap.getOrDefault(vo.getId(), 0L);
+            vo.setArticlesTotal(total);
+        }
+
         PageInfo<FindTagPageListRspVO> pageInfo = new PageInfo<>(findTagPageListRspVOList);
         return pageInfo;
     }

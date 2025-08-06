@@ -26,4 +26,6 @@ public class FindTagPageListRspVO {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    private Long articlesTotal;
 }
