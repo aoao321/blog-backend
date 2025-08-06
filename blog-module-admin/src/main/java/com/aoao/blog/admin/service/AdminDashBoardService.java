@@ -1,9 +1,12 @@
 package com.aoao.blog.admin.service;
 
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsCategoryRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardPVRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsInfoRspVO;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsTagRspVO;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +19,8 @@ public interface AdminDashBoardService {
     Map<LocalDate, Long> publishArticleStatistics();
 
     FindDashboardPVRspVO pvStatistics();
+
+    List<FindDashboardStatisticsCategoryRspVO> categoryStatistics();
+
+    FindDashboardStatisticsTagRspVO tagStatistics();
 }

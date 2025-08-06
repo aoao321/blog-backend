@@ -11,4 +11,14 @@
                    ( #{item.articleId} , #{item.tagId})
                 </foreach>
     </insert>
+    <select id="selectArticleCountByTags" resultType="java.util.Map">
+        SELECT t.name AS tagName,COUNT(*) AS articleCount FROM t_article_tag_rel at
+        LEFT JOIN t_tag t
+        ON at.tag_id = t.id AND t.is_deleted=0
+        WHERE t.name IN
+        <foreach collection="tagNames" item="tag" open="(" separator="," close=")">
+            #{tag}
+        </foreach>
+        GROUP BY at.tag_id
+    </select>
 </mapper>

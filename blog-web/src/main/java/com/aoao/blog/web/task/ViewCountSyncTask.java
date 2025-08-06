@@ -7,6 +7,7 @@ import com.aoao.blog.common.domain.mapper.StatisticsArticlePVMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,17 +60,31 @@ public class ViewCountSyncTask {
 
     @Scheduled(cron = "0 30 11 * * ?")
     public void syncViewCountTOPVTable() {
-        // 获取到今天的pv插入数据库中
         LocalDate today = LocalDate.now();
-        String pvStr = (String)stringRedisTemplate.opsForHash().get(PVKey, today.toString());
-        Long pv = Long.valueOf(pvStr);
+        String pvStr = (String) stringRedisTemplate.opsForHash().get(PVKey, today.toString());
+
         StatisticsArticlePVDO statisticsArticlePVDO = new StatisticsArticlePVDO();
         statisticsArticlePVDO.setPvDate(today);
-        statisticsArticlePVDO.setPvCount(pv);
-        // 插入表中
+
+        if (StringUtils.isEmpty(pvStr)) {
+            statisticsArticlePVDO.setPvCount(0L);
+            log.warn("未获取到 Redis 中 {} 的 PV 数据，默认置为 0", today);
+        } else {
+            try {
+                Long pv = Long.valueOf(pvStr);
+                statisticsArticlePVDO.setPvCount(pv);
+            } catch (NumberFormatException e) {
+                log.error("PV 数据格式错误，无法转换为 Long，值为: {}", pvStr, e);
+                statisticsArticlePVDO.setPvCount(0L); // 防止任务崩溃
+            }
+        }
+
+        // 插入数据库
         statisticsArticlePVMapper.insert(statisticsArticlePVDO);
-        // 删除昨天的记录
-        LocalDate yesterday = today.plusDays(1);
+
+        // 删除昨天的数据
+        LocalDate yesterday = today.minusDays(1);
         stringRedisTemplate.opsForHash().delete(PVKey, yesterday.toString());
     }
+
 }

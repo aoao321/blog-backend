@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
 
     void insertBatch(@Param("list") List<ArticleTagRelDO> articleTagRelDOList);
+
+    List<Map<String, Object>> selectArticleCountByTags(@Param("tagNames") List<String> tagNames);
 }

@@ -1,15 +1,12 @@
 package com.aoao.blog.admin.service.impl;
 
 import com.aoao.blog.admin.service.AdminDashBoardService;
-import com.aoao.blog.common.domain.dos.ArticleDO;
-import com.aoao.blog.common.domain.dos.ArticlePublishCountDO;
-import com.aoao.blog.common.domain.dos.StatisticsArticlePVDO;
-import com.aoao.blog.common.domain.mapper.ArticleMapper;
-import com.aoao.blog.common.domain.mapper.CategoryMapper;
-import com.aoao.blog.common.domain.mapper.StatisticsArticlePVMapper;
-import com.aoao.blog.common.domain.mapper.TagMapper;
+import com.aoao.blog.common.domain.dos.*;
+import com.aoao.blog.common.domain.mapper.*;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsCategoryRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardPVRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsInfoRspVO;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsTagRspVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,8 @@ public class AdminDashBoardServiceImpl implements AdminDashBoardService {
     private TagMapper tagMapper;
     @Autowired
     private StatisticsArticlePVMapper statisticsArticlePVMapper;
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public FindDashboardStatisticsInfoRspVO statistics() {
@@ -111,6 +110,41 @@ public class AdminDashBoardServiceImpl implements AdminDashBoardService {
             result.add(dbMap.getOrDefault(date, 0L));
         }
         FindDashboardPVRspVO vo = new FindDashboardPVRspVO(dateList, result);
+        return vo;
+    }
+
+    @Override
+    public List<FindDashboardStatisticsCategoryRspVO> categoryStatistics() {
+        List<CategoryDO> categoryDOS = categoryMapper.selectList(null);
+        List<FindDashboardStatisticsCategoryRspVO> vos = categoryDOS.stream().map(categoryDO -> {
+            return new FindDashboardStatisticsCategoryRspVO(categoryDO.getName(), categoryDO.getId());
+        }).collect(Collectors.toList());
+        return vos;
+    }
+
+    @Override
+    public FindDashboardStatisticsTagRspVO tagStatistics() {
+        List<Object> o = tagMapper.selectObjs(new QueryWrapper<TagDO>().select("name"));
+        List<String> tagNames = o.stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        // 统计每个标签下有多少文章{[tag_id:1 count:1],}
+        List<Map<String,Object>> mapList = articleTagRelMapper.selectArticleCountByTags(tagNames);
+        Map<String, Long> result = new HashMap<>();
+        // 遍历
+        for (Map<String, Object> map : mapList) {
+            String tagName = (String) map.get("tagName");
+            Long count = (Long) map.getOrDefault("articleCount", 0L);
+            result.put(tagName,count);
+        }
+        // 按 tagNames 顺序构建文章数量列表
+        List<Long> articleCounts = new ArrayList<>();
+        // {前端:1,后端:1}
+        for (String tagName : tagNames) {
+            articleCounts.add(result.getOrDefault(tagName, 0L));
+        }
+
+        FindDashboardStatisticsTagRspVO vo = new FindDashboardStatisticsTagRspVO(tagNames,articleCounts);
         return vo;
     }
 }

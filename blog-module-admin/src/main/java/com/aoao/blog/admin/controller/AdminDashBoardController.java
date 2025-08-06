@@ -1,8 +1,10 @@
 package com.aoao.blog.admin.controller;
 
 import com.aoao.blog.admin.service.AdminDashBoardService;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsCategoryRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardPVRspVO;
 import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsInfoRspVO;
+import com.aoao.blog.common.model.admin.vo.dashboard.FindDashboardStatisticsTagRspVO;
 import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +22,7 @@ import java.util.Map;
  * @create 2025-08-01-17:27
  */
 @RestController
-@RequestMapping("admin/dashboard")
+@RequestMapping("/admin/dashboard")
 @Api(tags = "Admin 仪表盘")
 public class AdminDashBoardController {
 
@@ -44,6 +47,20 @@ public class AdminDashBoardController {
     @ApiOperation(value = "获取后台仪表盘pv信息")
     public Result<FindDashboardPVRspVO> pvStatistics() {
         FindDashboardPVRspVO vo = adminDashBoardService.pvStatistics();
+        return Result.success(vo);
+    }
+
+    @PostMapping("/category/statistics")
+    @ApiOperation(value = "获取后台仪表盘分类信息")
+    public Result<List<FindDashboardStatisticsCategoryRspVO>> categoryStatistics() {
+        List<FindDashboardStatisticsCategoryRspVO> vo = adminDashBoardService.categoryStatistics();
+        return Result.success(vo);
+    }
+
+    @PostMapping("/tag/statistics")
+    @ApiOperation(value = "获取后台仪表盘标签信息")
+    public Result<FindDashboardStatisticsTagRspVO> tagStatistics() {
+        FindDashboardStatisticsTagRspVO vo = adminDashBoardService.tagStatistics();
         return Result.success(vo);
     }
 
