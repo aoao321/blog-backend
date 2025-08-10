@@ -27,4 +27,6 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
     void incrViewCount(@Param("id") Long articleId,@Param("incr") Long viewIncr);
 
     List<ArticlePublishCountDO> selectCountHalfaYear(@Param("today") LocalDate today,@Param("passday") LocalDate passday);
+
+    void updateType(@Param("ids") List<Long> articleIds,@Param("type") Integer type);
 }

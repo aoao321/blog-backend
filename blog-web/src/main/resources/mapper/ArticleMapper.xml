@@ -3,6 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aoao.blog.common.domain.mapper.ArticleMapper">
+    <update id="updateType">
+        UPDATE t_article
+        SET type=#{type}
+        WHERE id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
 
     <select id="selectDetail" resultType="com.aoao.blog.common.model.admin.vo.article.FindArticleDetailRspVO">
         SELECT article.*, category.id AS categoryId,content.content

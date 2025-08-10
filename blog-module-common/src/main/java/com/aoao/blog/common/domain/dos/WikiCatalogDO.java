@@ -1,30 +1,37 @@
 package com.aoao.blog.common.domain.dos;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TableName("t_article")
-public class ArticleDO {
+@TableName("t_wiki_catalog")
+public class WikiCatalogDO {
 
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    private Long wikiId;
+
+    private Long articleId;
+
     private String title;
 
-    private String cover;
+    private Integer level;
 
-    private String summary;
+    private Long parentId;
+
+    private Integer sort;
 
     private LocalDateTime createTime;
 
@@ -32,8 +39,4 @@ public class ArticleDO {
 
     @TableLogic
     private Boolean isDeleted;
-
-    private Long readNum;
-
-    private Integer type;
 }
