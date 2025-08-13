@@ -68,3 +68,5 @@ minio:
   accessKey: aoao1234
   secretKey: aoao1234
   bucketName: blog
+
+api-key: 6GehO1m3BbzBh0QQSqU3E3oHnI
