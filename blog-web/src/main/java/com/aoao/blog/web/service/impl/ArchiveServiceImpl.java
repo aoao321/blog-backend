@@ -37,6 +37,7 @@ public class ArchiveServiceImpl implements ArchiveService {
         PageHelper.startPage(reqVO.getCurrent(), reqVO.getSize());
         // 查询
         List<ArticleDO> articleDOS = articleMapper.selectList(null);
+        long count = articleMapper.selectCount(null);
         // 转换成vo
         List<FindArchiveArticleRspVO> vos = articleDOS.stream().map(articleDO -> {
             FindArchiveArticleRspVO vo = new FindArchiveArticleRspVO();
@@ -63,6 +64,7 @@ public class ArchiveServiceImpl implements ArchiveService {
         }).collect(Collectors.toList());
 
         PageInfo<FindArchiveArticlePageListRspVO> pageInfo = new PageInfo<>(result);
+        pageInfo.setTotal(count);
         return pageInfo;
     }
 }

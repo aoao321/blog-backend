@@ -1,0 +1,29 @@
+2025-08-14 00:51:28.625 [main] INFO  com.aoao.blog.web.BlogWebApplication - Starting BlogWebApplication using Java 1.8.0_421 on Ao_ao with PID 34956 (D:\springboot_project\blog\blog-web\target\classes started by ao in D:\springboot_project\blog)
+2025-08-14 00:51:28.627 [main] INFO  com.aoao.blog.web.BlogWebApplication - The following profiles are active: prod
+2025-08-14 00:51:29.347 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-08-14 00:51:29.349 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-08-14 00:51:29.362 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2025-08-14 00:51:29.881 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-08-14 00:51:29.887 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-08-14 00:51:29.888 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+2025-08-14 00:51:29.941 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-08-14 00:51:29.941 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1285 ms
+2025-08-14 00:51:31.836 [main] INFO  s.d.s.w.WebMvcPropertySourcedRequestMappingHandlerMapping - Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2ControllerWebMvc#getDocumentation(String, HttpServletRequest)]
+2025-08-14 00:51:32.190 [main] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5810772a, org.springframework.security.web.context.SecurityContextPersistenceFilter@b548f51, org.springframework.security.web.header.HeaderWriterFilter@615e7fe7, org.springframework.security.web.authentication.logout.LogoutFilter@eddc9bb, com.aoao.blog.jwt.filter.JwtAuthenticationFilter@4eacb6d1, com.aoao.blog.jwt.filter.TokenAuthenticationFilter@25c1f5ee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@96dfcbb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@77ebc9e6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3ccefe1b, org.springframework.security.web.session.SessionManagementFilter@403cff1c, org.springframework.security.web.access.ExceptionTranslationFilter@42f2cae8, org.springframework.security.web.access.intercept.AuthorizationFilter@571c2ed8]
+2025-08-14 00:51:32.246 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-08-14 00:51:32.247 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper - Documentation plugins bootstrapped
+2025-08-14 00:51:32.249 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper - Found 2 custom documentation plugin(s)
+2025-08-14 00:51:32.270 [main] INFO  s.d.spring.web.scanners.ApiListingReferenceScanner - Scanning for api listing references
+2025-08-14 00:51:32.391 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: deleteUsingPOST_1
+2025-08-14 00:51:32.412 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: pageUsingPOST_1
+2025-08-14 00:51:32.415 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: addUsingPOST_1
+2025-08-14 00:51:32.418 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: deleteUsingPOST_2
+2025-08-14 00:51:32.424 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: updateUsingPOST_1
+2025-08-14 00:51:32.452 [main] INFO  s.d.spring.web.scanners.ApiListingReferenceScanner - Scanning for api listing references
+2025-08-14 00:51:32.457 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: listUsingPOST_1
+2025-08-14 00:51:32.461 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: findArticlePageListUsingPOST_1
+2025-08-14 00:51:32.490 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: detailUsingPOST_1
+2025-08-14 00:51:32.491 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: findDashboardStatisticsUsingPOST_1
+2025-08-14 00:51:32.496 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: findTagListUsingPOST_1
+2025-08-14 00:51:32.503 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: listUsingPOST_2
+2025-08-14 00:51:32.512 [main] INFO  com.aoao.blog.web.BlogWebApplication - Started BlogWebApplication in 4.18 seconds (JVM running for 4.782)

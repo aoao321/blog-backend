@@ -38,16 +38,18 @@ public class AdminTagServiceImpl implements AdminTagService {
     @Override
     public void addTag(AddTagReqVO addTagReqVO) {
         // 根据传入的tag查询是否存在
-        String addTagReqVOName = addTagReqVO.getTags();
-        TagDO tagDO = tagMapper.selectOne(new QueryWrapper<TagDO>()
-                .eq("name", addTagReqVOName));
-        if (tagDO == null) {
-            // 插入数据
-            tagDO = new TagDO();
-            tagDO.setName(addTagReqVOName);
-            tagMapper.insert(tagDO);
-        }else {// 返回错误
-            throw new BizException(ResponseCodeEnum.TAG_EXIST);
+        List<String> tags = addTagReqVO.getTags();
+        for (String tag : tags) {
+            TagDO tagDO = tagMapper.selectOne(new QueryWrapper<TagDO>()
+                    .eq("name", tag));
+            if (tagDO == null) {
+                // 插入数据
+                tagDO = new TagDO();
+                tagDO.setName(tag);
+                tagMapper.insert(tagDO);
+            } else {// 返回错误
+                throw new BizException(ResponseCodeEnum.TAG_EXIST);
+            }
         }
     }
 
@@ -81,7 +83,10 @@ public class AdminTagServiceImpl implements AdminTagService {
                 .like(StringUtil.isNotEmpty(name), "name", name)
                 .gt(startDate!=null,"create_time", startDate)
                 .lt(startDate!=null,"create_time", endDate));
-
+        Long count = tagMapper.selectCount(new QueryWrapper<TagDO>()
+                .like(StringUtil.isNotEmpty(name), "name", name)
+                .gt(startDate != null, "create_time", startDate)
+                .lt(startDate != null, "create_time", endDate));
 
         // 封装成rspVO对象
         List<FindTagPageListRspVO> findTagPageListRspVOList = tagDOS.stream().map(tagDO -> {
@@ -105,6 +110,7 @@ public class AdminTagServiceImpl implements AdminTagService {
         }
 
         PageInfo<FindTagPageListRspVO> pageInfo = new PageInfo<>(findTagPageListRspVOList);
+        pageInfo.setTotal(count);
         return pageInfo;
     }
 

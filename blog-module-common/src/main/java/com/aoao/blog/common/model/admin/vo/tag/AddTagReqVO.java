@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Size;
+import java.util.List;
+
 
 /**
  * @author aoao
@@ -12,6 +15,6 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @ApiModel(value = "添加标签 VO")
 public class AddTagReqVO {
-    @Length(min = 1,max = 20,message = "标签长度限制在 1~20 之间")
-    private String tags;
+    @Size(min = 1, max = 10, message = "标签数量必须在1-10之间")
+    private List<String> tags;
 }

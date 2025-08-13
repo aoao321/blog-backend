@@ -34,7 +34,7 @@ public class WikiServiceImpl implements WikiService {
     @Override
     public List<FindWikiListRspVO> list() {
         List<WikiDO> wikiDOS = wikiMapper.selectList(new QueryWrapper<WikiDO>()
-                .eq("publish", 1)
+                .eq("is_publish", 1)
                 .orderByDesc("weight")
                 .orderByDesc("create_time")
         );
