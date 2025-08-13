@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,21 +28,21 @@ public class AdminCategoryController {
 
     @PostMapping("/add")
     @ApiOperation(value = "添加分类")
-    public Result addCategory(@RequestBody @Valid AddCategoryReqVO addCategoryReqVO) {
+    public Result addCategory(@RequestBody @Validated AddCategoryReqVO addCategoryReqVO) {
         adminCategoryService.addCategory(addCategoryReqVO);
         return Result.success();
     }
 
     @PostMapping("/list")
     @ApiOperation(value = "分页查询类型")
-    public PageResult<FindCategoryPageListRspVO> listCategory(@RequestBody @Valid FindCategoryPageListReqVO findCategoryPageListReqVO) {
+    public PageResult<FindCategoryPageListRspVO> listCategory(@RequestBody @Validated FindCategoryPageListReqVO findCategoryPageListReqVO) {
         PageInfo<FindCategoryPageListRspVO> pageInfo = adminCategoryService.page(findCategoryPageListReqVO);
         return PageResult.success(pageInfo);
     }
 
     @PostMapping("/delete")
     @ApiOperation(value = "删除类型")
-    public Result deleteCategory(@RequestBody @Valid DeleteCategoryReqVO deleteCategoryReqVO) {
+    public Result deleteCategory(@RequestBody @Validated DeleteCategoryReqVO deleteCategoryReqVO) {
         adminCategoryService.deleteCategory(deleteCategoryReqVO);
         return Result.success();
     }

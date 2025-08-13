@@ -13,5 +13,5 @@ import org.hibernate.validator.constraints.Length;
 @ApiModel(value = "添加标签 VO")
 public class AddTagReqVO {
     @Length(min = 1,max = 20,message = "标签长度限制在 1~20 之间")
-    private String name;
+    private String tags;
 }

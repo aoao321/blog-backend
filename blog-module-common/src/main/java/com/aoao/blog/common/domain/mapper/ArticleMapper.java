@@ -29,4 +29,7 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
     List<ArticlePublishCountDO> selectCountHalfaYear(@Param("today") LocalDate today,@Param("passday") LocalDate passday);
 
     void updateType(@Param("ids") List<Long> articleIds,@Param("type") Integer type);
+
+    @Select("SELECT MAX(weight) FROM t_article")
+    Integer selectMaxWeight();
 }

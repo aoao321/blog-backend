@@ -59,5 +59,19 @@ public class AdminArticleController {
         return Result.success();
     }
 
+    @PostMapping("/isTop/update")
+    @ApiOperation(value = "置顶")
+    public Result isTopUpdate(@RequestBody @Validated IsTopUpdateArticleReqVO isTopUpdateArticleReqVO) {
+        adminArticleService.isTopUpdate(isTopUpdateArticleReqVO);
+        return Result.success();
+    }
+
+    @PostMapping("/isPublish/update")
+    @ApiOperation(value = "修改发布")
+    public Result isPublish(@RequestBody @Validated IsPublishUpdateArticleReqVO isPublishUpdateArticleReqVO) {
+        adminArticleService.isPublishUpdate(isPublishUpdateArticleReqVO);
+        return Result.success();
+    }
+
 
 }

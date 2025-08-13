@@ -94,12 +94,13 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         CategoryDO categoryDO = categoryMapper.selectById(categoryId);
         if (categoryDO != null) {
             // 校验该分类下是否已经有文章，若有，则提示需要先删除分类下所有文章，才能删除
-            ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectOne(new QueryWrapper<ArticleCategoryRelDO>()
-                    .eq("category_id",categoryId));
-            if (Objects.nonNull(articleCategoryRelDO)) {
-                log.warn("==> 此分类下包含文章，无法删除，categoryId: {}", categoryId);
+            long count = articleCategoryRelMapper.selectCount(new QueryWrapper<ArticleCategoryRelDO>()
+                    .eq("category_id", categoryId));
+            if (count > 0) {
+                log.warn("分类下存在{}篇文章，禁止删除", count);
                 throw new BizException(ResponseCodeEnum.CATEGORY_CAN_NOT_DELETE);
             }
+
             categoryMapper.deleteById(categoryId);
         }else {
             throw new BizException(ResponseCodeEnum.CATEGORY_NOT_EXIST);

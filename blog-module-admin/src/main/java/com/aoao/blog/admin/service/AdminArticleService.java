@@ -17,4 +17,9 @@ public interface AdminArticleService {
     FindArticleDetailRspVO showDetail(FindArticleDetailReqVO findArticleDetailReqVO);
 
     void updateArticle(UpdateArticleReqVO updateArticleReqVO);
+
+    void isTopUpdate(IsTopUpdateArticleReqVO isTopUpdateArticleReqVO);
+
+    void isPublishUpdate(IsPublishUpdateArticleReqVO isPublishUpdateArticleReqVO);
+
 }

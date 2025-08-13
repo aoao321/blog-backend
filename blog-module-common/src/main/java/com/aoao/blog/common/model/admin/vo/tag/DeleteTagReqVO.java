@@ -3,6 +3,7 @@ package com.aoao.blog.common.model.admin.vo.tag;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author aoao
@@ -10,6 +11,6 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 public class DeleteTagReqVO {
-    @NotBlank
+    @NotNull(message = "ID不能为空")
     private Long Id;
 }

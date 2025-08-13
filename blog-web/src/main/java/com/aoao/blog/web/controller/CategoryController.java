@@ -1,6 +1,6 @@
 package com.aoao.blog.web.controller;
 
-import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryVO;
+import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryReqVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryArticlePageListRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.aoao.blog.common.utils.PageResult;
@@ -39,7 +39,7 @@ public class CategoryController {
 
     @PostMapping("/article/list")
     @ApiOperation(value = "前台获取分类下文章分页数据")
-    public PageResult<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(@RequestBody @Validated FindArticleWithTypeCategoryVO reqVO) {
+    public PageResult<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(@RequestBody @Validated FindArticleWithTypeCategoryReqVO reqVO) {
         PageInfo<FindCategoryArticlePageListRspVO> pageInfo = categoryService.findCategoryArticlePageList(reqVO);
         return PageResult.success(pageInfo);
     }

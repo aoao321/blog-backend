@@ -38,7 +38,7 @@ public class AdminTagServiceImpl implements AdminTagService {
     @Override
     public void addTag(AddTagReqVO addTagReqVO) {
         // 根据传入的tag查询是否存在
-        String addTagReqVOName = addTagReqVO.getName();
+        String addTagReqVOName = addTagReqVO.getTags();
         TagDO tagDO = tagMapper.selectOne(new QueryWrapper<TagDO>()
                 .eq("name", addTagReqVOName));
         if (tagDO == null) {
@@ -57,10 +57,10 @@ public class AdminTagServiceImpl implements AdminTagService {
         TagDO tagDO = tagMapper.selectById(id);
         if (tagDO != null) {
             // 校验该标签下是否有关联的文章，若有，则不允许删除，提示用户需要先删除标签下的文章
-            ArticleTagRelDO articleTagRelDO = articleTagRelMapper.selectOne(new QueryWrapper<ArticleTagRelDO>()
-                    .eq("tag_id", id));
-            if (Objects.nonNull(articleTagRelDO)) {
-                log.warn("==> 此标签下包含文章，无法删除，tagId: {}", id);
+            long count = articleTagRelMapper.selectCount(new QueryWrapper<ArticleTagRelDO>()
+                    .eq("category_id", id));
+            if (count > 0) {
+                log.warn("分类下存在{}篇文章，禁止删除", count);
                 throw new BizException(ResponseCodeEnum.TAG_CAN_NOT_DELETE);
             }
             tagMapper.deleteById(id);

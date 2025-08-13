@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,21 +28,21 @@ public class AdminTagController {
 
     @PostMapping("/add")
     @ApiOperation("新增标签")
-    public Result addTag(@RequestBody @Valid AddTagReqVO addTagReqVO) {
+    public Result addTag(@RequestBody @Validated AddTagReqVO addTagReqVO) {
         adminTagService.addTag(addTagReqVO);
         return Result.success();
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除标签")
-    public Result deleteTag(@RequestBody @Valid DeleteTagReqVO deleteTagReqVO) {
+    public Result deleteTag(@RequestBody @Validated DeleteTagReqVO deleteTagReqVO) {
         adminTagService.deleteTag(deleteTagReqVO);
         return Result.success();
     }
 
     @PostMapping("/list")
     @ApiOperation("分页查询")
-    public PageResult<FindTagPageListRspVO> listTag(@RequestBody @Valid FindTagPageListReqVO findTagPageListReqVO) {
+    public PageResult<FindTagPageListRspVO> listTag(@RequestBody @Validated FindTagPageListReqVO findTagPageListReqVO) {
         PageInfo<FindTagPageListRspVO> pageInfo = adminTagService.page(findTagPageListReqVO);
         return PageResult.success(pageInfo);
     }

@@ -33,7 +33,11 @@ public class WikiServiceImpl implements WikiService {
 
     @Override
     public List<FindWikiListRspVO> list() {
-        List<WikiDO> wikiDOS = wikiMapper.selectList(null);
+        List<WikiDO> wikiDOS = wikiMapper.selectList(new QueryWrapper<WikiDO>()
+                .eq("publish", 1)
+                .orderByDesc("weight")
+                .orderByDesc("create_time")
+        );
         // 转vo
         List<FindWikiListRspVO> vos = wikiDOS.stream().map(wikiDO -> {
             FindWikiListRspVO rspVO = new FindWikiListRspVO();

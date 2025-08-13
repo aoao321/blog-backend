@@ -29,4 +29,8 @@ public class FindArticlePageListRspVO {
      * 发布时间
      */
     private LocalDateTime createTime;
+
+    private Boolean isTop;
+
+    private Boolean isPublish;
 }

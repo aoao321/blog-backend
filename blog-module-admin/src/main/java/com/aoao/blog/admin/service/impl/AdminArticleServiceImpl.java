@@ -127,6 +127,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         List<FindArticlePageListRspVO> vos = articleDOS.stream().map(articleDO -> {
             FindArticlePageListRspVO vo = new FindArticlePageListRspVO();
             BeanUtils.copyProperties(articleDO, vo);
+            if(articleDO.getWeight()!=null && articleDO.getWeight()>0){
+                vo.setIsTop(true);
+            }
             return vo;
         }).collect(Collectors.toList());
         PageInfo<FindArticlePageListRspVO> pageInfo = new PageInfo<>(vos);
@@ -194,6 +197,34 @@ public class AdminArticleServiceImpl implements AdminArticleService {
             throw new BizException(ResponseCodeEnum.ARTICLE_NOT_EXIST);
         }
 
+    }
+
+    @Override
+    public void isTopUpdate(IsTopUpdateArticleReqVO isTopUpdateArticleReqVO) {
+        Long id = isTopUpdateArticleReqVO.getId();
+        ArticleDO articleDO = articleMapper.selectById(id);
+        if (Objects.isNull(articleDO)) {
+            throw new BizException(ResponseCodeEnum.ARTICLE_NOT_EXIST);
+        }
+        Integer maxWeight = articleMapper.selectMaxWeight();
+        if (isTopUpdateArticleReqVO.getIsTop() == false) {
+            maxWeight = 0;
+        }else {
+            // 设置新 weight 为最大值 +1（确保置顶）
+            articleDO.setWeight(maxWeight + 1);
+        }
+        articleMapper.updateById(articleDO);
+    }
+
+    @Override
+    public void isPublishUpdate(IsPublishUpdateArticleReqVO isPublishUpdateArticleReqVO) {
+        Long id = isPublishUpdateArticleReqVO.getId();
+        ArticleDO articleDO = articleMapper.selectById(id);
+        if (Objects.isNull(articleDO)) {
+            throw new BizException(ResponseCodeEnum.ARTICLE_NOT_EXIST);
+        }
+        articleDO.setIsPublish(isPublishUpdateArticleReqVO.getIsPublish());
+        articleMapper.updateById(articleDO);
     }
 
 

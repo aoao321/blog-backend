@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * @create 2025-07-27-18:11
  */
 @Data
-public class FindArticleWithTypeCategoryVO extends BasePageQuery {
+public class FindArticleWithTypeCategoryReqVO extends BasePageQuery {
     @NotNull
     private Long id;
 }

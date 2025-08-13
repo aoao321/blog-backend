@@ -36,4 +36,8 @@ public class ArticleDO {
     private Long readNum;
 
     private Integer type;
+
+    private Boolean isPublish;
+
+    private Integer weight;
 }

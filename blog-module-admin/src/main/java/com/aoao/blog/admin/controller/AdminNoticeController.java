@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,28 +28,28 @@ public class AdminNoticeController {
 
     @PostMapping("/add")
     @ApiOperation("新增")
-    public Result add(@RequestBody AddNoticeReqVO addNoticeReqVO) {
+    public Result add(@RequestBody @Validated AddNoticeReqVO addNoticeReqVO) {
         adminNoticeService.add(addNoticeReqVO);
         return Result.success();
     }
 
     @PostMapping("/update")
     @ApiOperation("修改")
-    public Result update(@RequestBody UpdateNoticeReqVO updateNoticeReqVO) {
+    public Result update(@RequestBody @Validated  UpdateNoticeReqVO updateNoticeReqVO) {
         adminNoticeService.update(updateNoticeReqVO);
         return Result.success();
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除")
-    public Result delete(@RequestBody DeleteNoticeReqVO deleteNoticeReqVO) {
+    public Result delete(@RequestBody @Validated DeleteNoticeReqVO deleteNoticeReqVO) {
         adminNoticeService.delete(deleteNoticeReqVO);
         return Result.success();
     }
 
     @PostMapping("/list")
     @ApiOperation("分页查询")
-    public PageResult<FindNoticePageListRspVO> list(@RequestBody FindNoticePageListReqVO reqVO) {
+    public PageResult<FindNoticePageListRspVO> list(@RequestBody @Validated FindNoticePageListReqVO reqVO) {
         PageInfo<FindNoticePageListRspVO> pageInfo = adminNoticeService.list(reqVO);
         return PageResult.success(pageInfo);
     }

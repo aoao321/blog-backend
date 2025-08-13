@@ -65,11 +65,13 @@ public class ArticleServiceImpl implements ArticleService {
                 // 空对象标记，避免穿透
                 return new PageInfo<>(Collections.emptyList());
             }
-            return JsonUtil.toBean(pageJSON,PageInfo.class);
+            return JsonUtil.toBean(pageJSON, PageInfo.class);
         }
         // 开启分页
         PageHelper.startPage(query.getCurrent(), query.getSize());
         List<ArticleDO> articleList = articleMapper.selectList(new QueryWrapper<ArticleDO>()
+                .eq("is_publish", 1)
+                .orderByDesc("weight")
                 .orderByDesc("create_time"));
 
         if (articleList == null || articleList.isEmpty()) {
@@ -83,7 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
         // 构建分页信息，注意这里用 voList 构造 PageInfo
         PageInfo<FindIndexArticlePageListRspVO> pageInfo = new PageInfo<>(voList);
         // 存入redis
-        stringRedisTemplate.opsForValue().set(key,JsonUtil.toJson(pageInfo));
+        stringRedisTemplate.opsForValue().set(key, JsonUtil.toJson(pageInfo));
         return pageInfo;
     }
 

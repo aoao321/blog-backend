@@ -4,7 +4,7 @@ import com.aoao.blog.common.domain.dos.ArticleDO;
 import com.aoao.blog.common.domain.dos.CategoryDO;
 import com.aoao.blog.common.domain.mapper.ArticleMapper;
 import com.aoao.blog.common.domain.mapper.CategoryMapper;
-import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryVO;
+import com.aoao.blog.common.model.front.vo.category.FindArticleWithTypeCategoryReqVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryArticlePageListRspVO;
 import com.aoao.blog.common.model.front.vo.category.FindCategoryListRspVO;
 import com.aoao.blog.web.service.CategoryService;
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageInfo<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(FindArticleWithTypeCategoryVO reqVO) {
+    public PageInfo<FindCategoryArticlePageListRspVO> findCategoryArticlePageList(FindArticleWithTypeCategoryReqVO reqVO) {
         PageHelper.startPage(reqVO.getCurrent(), reqVO.getSize());
         Long typeId = reqVO.getId();
         // 查询

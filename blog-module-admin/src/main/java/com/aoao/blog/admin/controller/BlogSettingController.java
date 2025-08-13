@@ -7,6 +7,7 @@ import com.aoao.blog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class BlogSettingController {
 
     @PostMapping("/update")
     @ApiOperation("更新设置")
-    public Result updateSetting(@RequestBody @Valid UpdateBlogSettingsReqVO reqVO) {
+    public Result updateSetting(@RequestBody @Validated UpdateBlogSettingsReqVO reqVO) {
         adminBlogSettingService.updateSetting(reqVO);
         return Result.success();
     }
