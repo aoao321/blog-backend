@@ -1,3 +1,0 @@
-2025-07-08 19:14:30.792 [main] INFO  com.aoao.blog.web.BlogWebApplicationTests - Starting BlogWebApplicationTests using Java 1.8.0_421 on Ao_ao with PID 10688 (started by ao in D:\springboot_project\blog\blog-web)
-2025-07-08 19:14:30.797 [main] INFO  com.aoao.blog.web.BlogWebApplicationTests - The following profiles are active: prod
-2025-07-08 19:14:31.864 [main] INFO  com.aoao.blog.web.BlogWebApplicationTests - Started BlogWebApplicationTests in 1.453 seconds (JVM running for 2.651)

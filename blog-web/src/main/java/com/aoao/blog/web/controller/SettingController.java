@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @create 2025-07-25-12:41
  */
 @RestController
-@RequestMapping("/settings")
+@RequestMapping("/blog/settings")
 @Api("设置相关")
 public class SettingController {
 

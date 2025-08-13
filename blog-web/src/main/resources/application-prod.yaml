@@ -1,7 +1,7 @@
 server:
   port: 8080 # 项目运行端口，默认 8080
 logging:
-  config: classpath:logback-weblog.xml
+  config: classpath:logback-blog.xml
 
 spring:
   servlet:

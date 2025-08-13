@@ -4,7 +4,7 @@ app:
 spring:
   profiles:
     # 默认激活 dev 环境
-    active: dev
+    active: prod
 
 
 
