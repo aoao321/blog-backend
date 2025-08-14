@@ -32,4 +32,6 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
 
     @Select("SELECT MAX(weight) FROM t_article")
     Integer selectMaxWeight();
+
+
 }

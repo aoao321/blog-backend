@@ -5,6 +5,7 @@ import com.aoao.blog.common.model.front.vo.tag.FindTagListRspVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class FindIndexArticlePageListRspVO implements Serializable {
     private String cover;
     private String title;
 
+    @DateTimeFormat(fallbackPatterns = "yyyy-MM-dd")
     private LocalDate createTime;
     private String summary;
     /**

@@ -83,7 +83,11 @@ public class ArticleServiceImpl implements ArticleService {
         List<FindIndexArticlePageListRspVO> voList = buildArticleVOListWithCategoryAndTag(articleList);
 
         // 构建分页信息，注意这里用 voList 构造 PageInfo
+        PageInfo<ArticleDO> articleDOPageInfo = new PageInfo<>(articleList);
         PageInfo<FindIndexArticlePageListRspVO> pageInfo = new PageInfo<>(voList);
+        BeanUtils.copyProperties(articleDOPageInfo, pageInfo);
+        pageInfo.setTotal(articleDOPageInfo.getTotal());
+        pageInfo.setList(voList);
         // 存入redis
         stringRedisTemplate.opsForValue().set(key, JsonUtil.toJson(pageInfo));
         return pageInfo;
@@ -165,6 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .map(article -> {
                     FindIndexArticlePageListRspVO vo = new FindIndexArticlePageListRspVO();
                     BeanUtils.copyProperties(article, vo);
+                    vo.setCreateTime(article.getCreateTime().toLocalDate());
                     return vo;
                 }).collect(Collectors.toList());
 

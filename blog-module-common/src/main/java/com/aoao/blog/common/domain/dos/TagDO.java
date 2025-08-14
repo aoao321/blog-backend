@@ -28,6 +28,6 @@ public class TagDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 }

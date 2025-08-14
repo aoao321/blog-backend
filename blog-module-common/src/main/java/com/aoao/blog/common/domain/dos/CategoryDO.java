@@ -30,6 +30,6 @@ public class CategoryDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 }

@@ -37,6 +37,6 @@ public class WikiCatalogDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 }

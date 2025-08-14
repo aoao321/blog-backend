@@ -79,8 +79,8 @@ public class CommentDO implements Serializable {
     /**
     * 删除标志位：0：未删除 1：已删除
     */
-    @TableLogic
-    private Integer isDeleted;
+
+    private Boolean isDeleted;
 
     /**
     * 回复的评论 ID

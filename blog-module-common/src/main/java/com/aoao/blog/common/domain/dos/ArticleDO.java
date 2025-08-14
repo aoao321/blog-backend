@@ -30,7 +30,7 @@ public class ArticleDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 
     private Long readNum;

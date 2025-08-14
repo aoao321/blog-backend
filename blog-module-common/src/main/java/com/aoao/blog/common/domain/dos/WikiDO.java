@@ -31,7 +31,7 @@ public class WikiDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 
     private Integer weight;

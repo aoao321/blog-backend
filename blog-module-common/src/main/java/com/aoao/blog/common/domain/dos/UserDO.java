@@ -33,6 +33,6 @@ public class UserDO {
 
     private Date updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 }

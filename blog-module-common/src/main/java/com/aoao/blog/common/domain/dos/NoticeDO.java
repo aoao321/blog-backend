@@ -30,6 +30,6 @@ public class NoticeDO {
 
     private LocalDateTime updateTime;
 
-    @TableLogic
+
     private Boolean isDeleted;
 }
