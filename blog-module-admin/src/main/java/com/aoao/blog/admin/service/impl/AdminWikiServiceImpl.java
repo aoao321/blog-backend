@@ -195,7 +195,7 @@ public class AdminWikiServiceImpl implements AdminWikiService {
         List<UpdateWikiCatalogItemReqVO> catalogs = updateWikiCatalogReqVO.getCatalogs();
 
         // 删除原本目录
-        delete(new DeleteWikiReqVO(wikiId));
+        wikiCatalogMapper.delete(new QueryWrapper<WikiCatalogDO>().eq("wiki_id",wikiId));
         // 再重新插入新的目录数据
         // 若入参传入的目录不为空
         if (!CollectionUtils.isEmpty(catalogs)) {

@@ -60,7 +60,7 @@ public class AdminTagServiceImpl implements AdminTagService {
         if (tagDO != null) {
             // 校验该标签下是否有关联的文章，若有，则不允许删除，提示用户需要先删除标签下的文章
             long count = articleTagRelMapper.selectCount(new QueryWrapper<ArticleTagRelDO>()
-                    .eq("category_id", id));
+                    .eq("tag_id", id));
             if (count > 0) {
                 log.warn("分类下存在{}篇文章，禁止删除", count);
                 throw new BizException(ResponseCodeEnum.TAG_CAN_NOT_DELETE);
@@ -83,10 +83,6 @@ public class AdminTagServiceImpl implements AdminTagService {
                 .like(StringUtil.isNotEmpty(name), "name", name)
                 .gt(startDate!=null,"create_time", startDate)
                 .lt(startDate!=null,"create_time", endDate));
-        Long count = tagMapper.selectCount(new QueryWrapper<TagDO>()
-                .like(StringUtil.isNotEmpty(name), "name", name)
-                .gt(startDate != null, "create_time", startDate)
-                .lt(startDate != null, "create_time", endDate));
 
         // 封装成rspVO对象
         List<FindTagPageListRspVO> findTagPageListRspVOList = tagDOS.stream().map(tagDO -> {
@@ -109,8 +105,10 @@ public class AdminTagServiceImpl implements AdminTagService {
             vo.setArticlesTotal(total);
         }
 
+        PageInfo<TagDO> sourceInfo = new PageInfo<>(tagDOS);
         PageInfo<FindTagPageListRspVO> pageInfo = new PageInfo<>(findTagPageListRspVOList);
-        pageInfo.setTotal(count);
+        BeanUtils.copyProperties(sourceInfo, pageInfo);
+        pageInfo.setList(findTagPageListRspVOList);
         return pageInfo;
     }
 

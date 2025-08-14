@@ -8,26 +8,28 @@
     <!-- 应用名称 -->
     <property scope="context" name="appName" value="blog" />
     <!-- 自定义日志输出路径 -->
-    <property name="LOG_PATH" value="D:/springboot_project/blog/logs" />
+    <if condition='property("os.name").contains("Windows")'>
+        <then>
+            <property name="LOG_PATH" value="D:/springboot_project/blog/logs" />
+        </then>
+        <else>
+            <!-- Linux环境路径 -->
+            <property name="LOG_PATH" value="/app/logs/blog" />
+        </else>
+    </if>
     <!-- 文件日志输出格式 -->
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
 
     <!-- 文件日志输出 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 当前正在写入的日志文件 -->
+        <!-- 移除 <mkdir> 相关代码，Logback 不支持该标签 -->
         <file>${LOG_PATH}/${appName}.log</file>
 
-        <!-- 按时间+大小滚动 ✅ 最常用）结合了按时间和按大小两种策略每天一个文件，
-             同时单个文件大小受限制
-             一旦大小超限，就在同一天创建带索引的新文件（%i）-->
+        <!-- 按时间+大小滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 日志文件命名模式（包含日期和索引）-->
             <fileNamePattern>${LOG_PATH}/${appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- 最多保留30天的日志文件 -->
             <maxHistory>30</maxHistory>
-            <!-- 单个文件最大 10MB，超过后生成下一个索引文件 -->
             <maxFileSize>10MB</maxFileSize>
-            <!-- 所有日志文件总容量不超过 1GB -->
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 

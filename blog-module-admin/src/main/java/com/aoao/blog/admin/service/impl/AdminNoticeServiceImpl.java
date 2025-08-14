@@ -86,7 +86,10 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
             BeanUtils.copyProperties(noticeDO, findNoticePageListRspVO);
             return findNoticePageListRspVO;
         }).collect(Collectors.toList());
+        PageInfo<NoticeDO> sourceInfo = new PageInfo<>(noticeDOS);
         PageInfo<FindNoticePageListRspVO> pageInfo = new PageInfo<>(vos);
+        BeanUtils.copyProperties(sourceInfo, pageInfo);
+        pageInfo.setList(vos);
         return pageInfo;
     }
 }
