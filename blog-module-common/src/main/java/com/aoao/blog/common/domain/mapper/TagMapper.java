@@ -25,4 +25,7 @@ public interface TagMapper extends BaseMapper<TagDO> {
 
     List<Map<String, Object>> selectWithArticleTotal();
 
+    List<TagDO> selectByNames(@Param("names") List<String> newTagNames);
+
+    List<TagDO> selectByIds(@Param("ids") List<Long> tagIds);
 }

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aoao.blog.common.domain.mapper.TagMapper">
-    <insert id="insertBatch" parameterType="java.util.List">
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_tag (name)
         VALUES
         <foreach collection="list" item="tag" separator=",">
@@ -15,12 +15,19 @@
     <select id="selectExist" resultType="com.aoao.blog.common.domain.dos.TagDO">
         SELECT * FROM t_tag
         <where>
-            name IN
-            <foreach collection="tags" item="tag" open="(" separator="," close=")">
-                #{tag}
-            </foreach>
+            <if test="tags != null and tags.size() > 0">
+                name IN
+                <foreach collection="tags" item="tag" open="(" separator="," close=")">
+                    #{tag}
+                </foreach>
+            </if>
+            <!-- 若tags为空，添加一个恒假条件，避免返回全表数据 -->
+            <if test="tags == null or tags.size() == 0">
+                AND 1 = 0
+            </if>
         </where>
     </select>
+
     <select id="selectByArticleId" resultType="java.lang.Long">
         SELECT t.id FROM t_tag t
             LEFT JOIN t_article_tag_rel at
@@ -28,7 +35,7 @@
                     WHERE t.is_deleted=0 AND at.article_id=#{articleId}
     </select>
     <select id="selectBatchByArticleIds" resultType="java.util.Map">
-            SELECT tag.id, tag.name,at.article_id AS articleId
+            SELECT tag.id, tag.name as tagName,at.article_id AS articleId
             FROM t_tag AS tag
             LEFT JOIN t_article_tag_rel at ON tag.id = at.tag_id
             <where>
@@ -45,5 +52,36 @@
     </select>
     <select id="selectWithArticleTotal" resultType="java.util.Map">
         SELECT t.id,count(*) as articleTotal FROM t_article_tag_rel at,t_tag t WHERE at.tag_id=t.id GROUP BY t.id
+    </select>
+    <select id="selectByNames" resultType="com.aoao.blog.common.domain.dos.TagDO">
+        SELECT
+        id,
+        name,
+        create_time,
+        update_time,
+        is_deleted
+        FROM
+        t_tag
+        WHERE
+        name IN
+        <foreach collection="names" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <select id="selectByIds" resultType="com.aoao.blog.common.domain.dos.TagDO">
+        SELECT
+        id,
+        name,
+        create_time,
+        update_time,
+        is_deleted
+        FROM
+        t_tag
+        WHERE
+        id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_deleted = 0
     </select>
 </mapper>

@@ -189,7 +189,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
             // 先删除标签记录
             articleTagRelMapper.delete(new QueryWrapper<ArticleTagRelDO>()
                     .eq("article_id", articleId));
-            // 插入新标签记录
+            // 插入新标签记录，如果存在标签传入的是id，不存在传入的是string
             List<String> publishTags = updateArticleReqVO.getTags();
             tagOperation(articleId, publishTags);
         }
@@ -228,55 +228,78 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     }
 
 
-    private void tagOperation(Long articleID, List<String> tags) {
-        // 从数据库查询出已经存在的标签
-        List<TagDO> existList = Optional.ofNullable(tagMapper.selectExist(tags)).orElse(Collections.emptyList());
-        // 建立与已存在标签的关联
-        if (!existList.isEmpty()) {
-            List<ArticleTagRelDO> articleTagRelDOList = existList.stream().map(tag -> {
-                ArticleTagRelDO rel = new ArticleTagRelDO();
-                rel.setArticleId(articleID);
-                rel.setTagId(tag.getId());
-                return rel;
-            }).collect(Collectors.toList());
-
-            articleTagRelMapper.insertBatch(articleTagRelDOList);
+    private void tagOperation(Long articleId, List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return;
         }
 
-        // 继续筛选出不存在的标签
-        Set<String> tagSet = new HashSet<>(tags);
-        List<String> collect = existList
-                .stream()
-                .map(TagDO::getName)
-                .collect(Collectors.toList());
-        // 移除已存在的标签，得到真正不存在的标签集合
-        tagSet.removeAll(collect);
+        // 分离数字ID和字符串标签名
+        List<Long> tagIds = new ArrayList<>();
+        List<String> newTagNames = new ArrayList<>();
 
-        // 去掉存在的标签不为空，就插入数据库中没有的标签了
-        if (!tagSet.isEmpty()) {
-            // 转换为 TagDO 列表再批量插入
-            List<TagDO> newTagList = tagSet.stream()
-                    .map(tagName -> {
-                        TagDO tag = new TagDO();
-                        tag.setName(tagName);
-                        return tag;
-                    }).collect(Collectors.toList());
-            tagMapper.insertBatch(newTagList);
-
-            // 插入后查询新插入的标签（为了拿到 ID）
-            List<TagDO> insertedTags = tagMapper.selectExist(new ArrayList<>(tagSet));
-
-            // 建立关联
-            List<ArticleTagRelDO> newTagRelList = new ArrayList<>();
-            for (TagDO tag : insertedTags) {
-                ArticleTagRelDO rel = new ArticleTagRelDO();
-                rel.setArticleId(articleID);
-                rel.setTagId(tag.getId());
-                newTagRelList.add(rel);
+        for (String tag : tags) {
+            if (tag.matches("\\d+")) { // 判断是否为数字ID
+                tagIds.add(Long.parseLong(tag));
+            } else {
+                newTagNames.add(tag);
             }
-            articleTagRelMapper.insertBatch(newTagRelList);
         }
 
+        // 处理已存在的标签(通过ID传入的)
+        if (!tagIds.isEmpty()) {
+            List<TagDO> existTags = tagMapper.selectByIds(tagIds);
+            if (!existTags.isEmpty()) {
+                List<ArticleTagRelDO> relations = existTags.stream()
+                        .map(tag -> {
+                            ArticleTagRelDO rel = new ArticleTagRelDO();
+                            rel.setArticleId(articleId);
+                            rel.setTagId(tag.getId());
+                            return rel;
+                        })
+                        .collect(Collectors.toList());
+                articleTagRelMapper.insertBatch(relations);
+            }
+        }
 
+        // 处理新标签(通过字符串传入的)
+        if (!newTagNames.isEmpty()) {
+            // 先查询哪些标签名已经存在(防止重复)
+            List<TagDO> alreadyExistTags = tagMapper.selectByNames(newTagNames);
+            Set<String> existingNames = alreadyExistTags.stream()
+                    .map(TagDO::getName)
+                    .collect(Collectors.toSet());
+
+            // 过滤出真正需要新增的标签
+            List<TagDO> tagsToInsert = newTagNames.stream()
+                    .filter(name -> !existingNames.contains(name))
+                    .map(name -> {
+                        TagDO tag = new TagDO();
+                        tag.setName(name);
+                        return tag;
+                    })
+                    .collect(Collectors.toList());
+
+            // 批量插入新标签
+            if (!tagsToInsert.isEmpty()) {
+                tagMapper.insertBatch(tagsToInsert);
+            }
+
+            // 获取所有需要关联的标签(包括刚插入的和已经存在的)
+            List<TagDO> allTagsToRelate = new ArrayList<>();
+            allTagsToRelate.addAll(alreadyExistTags);
+            allTagsToRelate.addAll(tagsToInsert);
+
+            // 建立关联关系
+            List<ArticleTagRelDO> newRelations = allTagsToRelate.stream()
+                    .map(tag -> {
+                        ArticleTagRelDO rel = new ArticleTagRelDO();
+                        rel.setArticleId(articleId);
+                        rel.setTagId(tag.getId());
+                        return rel;
+                    })
+                    .collect(Collectors.toList());
+
+            articleTagRelMapper.insertBatch(newRelations);
+        }
     }
 }

@@ -205,7 +205,7 @@ public class ArticleServiceImpl implements ArticleService {
         for (Map<String, Object> map : tagMapList) {
             Long articleId = ((Number) map.get("articleId")).longValue();
             Long tagId = ((Number) map.get("id")).longValue();
-            String name = (String) map.get("name");
+            String name = (String) map.get("tagName");
 
             FindTagListRspVO tag = new FindTagListRspVO(tagId, name, 0l);
             tagMap.computeIfAbsent(articleId, k -> new ArrayList<>()).add(tag);
